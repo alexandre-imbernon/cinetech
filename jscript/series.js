@@ -58,6 +58,7 @@ function changePage(pageNumber) {
                 const card = document.createElement('div');
                 card.classList.add('col-md-3', 'mb-4');
 
+                
                 // Modification de la structure de la carte pour une apparence améliorée
                 card.innerHTML = `
                     <div class="card h-100 shadow">
@@ -67,7 +68,7 @@ function changePage(pageNumber) {
                                 <h5 class="card-title">${serie.name}</h5>
                                 <p class="card-text">${serie.overview}</p>
                             </div>
-                            <div>
+                            <div class="d-flex justify-content-between">
                                 <a href="#" class="btn btn-secondary mt-auto">Détails</a>
                                 <a href="#" class="btn btn-primary mt-auto">Ajouter un commentaire</a>
                             </div>
