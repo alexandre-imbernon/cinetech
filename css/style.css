@@ -1,3 +1,7 @@
+body{
+    background-color: rgb(152, 137, 116);
+}
+
 .card:hover{
     transform: scale(1.05);
     transition: transform 0.3s ease;
@@ -7,6 +11,24 @@
     background-color: rgb(210, 198, 198);
 }
 
+
 button{
     margin-bottom: 20px;    
+}
+.buttons-container button {
+    display: none; /* Masquer les boutons par défaut */
+}
+
+.card:hover .buttons-container button {
+    display: inline-block; /* Afficher les boutons lorsqu'une carte est survolée */
+}
+
+.card {
+    margin-bottom: 0; /* Supprime les marges par défaut en bas de la carte */
+    padding-bottom: 0; /* Supprime le rembourrage par défaut en bas de la carte */
+}
+
+.card-img-top {
+    object-fit: cover; /* Pour que l'image couvre toute la carte sans déformation */
+    height: 100%; /* Pour que l'image occupe toute la hauteur de la carte */
 }
