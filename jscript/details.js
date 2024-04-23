@@ -55,11 +55,11 @@ async function getSeriesDetails() {
             actors = 'Inconnu';
         }
 
-        // Récupérer l'ID du premier genre de la série
-        const genreId = data.genres[0].id;
+        // Récupérer l'ID du premier genre de la série, s'il existe
+        const genreId = data.genres.length > 0 ? data.genres[0].id : null;
 
-        // Récupérer une série recommandée du même genre
-        const recommendedSeries = await getRecommendedSeries(genreId);
+        // Récupérer une série recommandée du même genre, si un genre est disponible
+        const recommendedSeries = genreId ? await getRecommendedSeries(genreId) : 'Aucune série recommandée';
 
         document.getElementById("details").innerHTML = `
             <h2>${serieTitle}</h2>
@@ -81,3 +81,4 @@ async function getSeriesDetails() {
 }
 
 getSeriesDetails();
+
