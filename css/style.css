@@ -3,6 +3,10 @@
     transition: transform 0.3s ease;
 }
 
-.btnF{
-    color: rgb(179, 255, 0);
+.btn{
+    background-color: rgb(210, 198, 198);
+}
+
+button{
+    margin-bottom: 20px;    
 }

@@ -24,13 +24,9 @@ function getSeries(pageNumber) {
                 <div class="card h-100 shadow hover-effect">
                         <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top hover-zoom-image" alt="${serie.name}">
                         <div class="card-body d-flex flex-column justify-content-between"></div>
-                            <div class="buttons-container">
-                            <button class="btn btn-secondary btn-details"><i class="fas fa-info-circle"></i> </button>
-                            <button class="btn btn-secondary btn-favorite"><i class="fas fa-heart"></i> </button>
-                            <button class="btn btn-secondary btn-play"><i class="fas fa-play"></i> </button>
-                    </div>
-
-                        
+                            <div class="buttons-container d-flex justify-content-center ">
+                            <button class="btn btn-secondary btn-details me-2"><i class="fas fa-info-circle"> Détails</i> </button>
+                            <button class="btn btn-secondary btn-favorite ms-2"><i class="fas fa-heart"></i> Favoris </button>
                     </div>
                 `;
                 seriesContainer.appendChild(card);
@@ -60,14 +56,12 @@ function changePage(pageNumber) {
 
                 // Modification de la structure de la carte pour une apparence améliorée
                 card.innerHTML = `
-                    <div class="card h-100 shadow">
-                        <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top" alt="${serie.name}">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            
-                            <div class="d-flex justify-content-between">
-                                
-                            </div>
-                        </div>
+                <div class="card h-100 shadow hover-effect">
+                        <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top hover-zoom-image" alt="${serie.name}">
+                        <div class="card-body d-flex flex-column justify-content-between"></div>
+                            <div class="buttons-container d-flex justify-content-center ">
+                            <button class="btn btn-secondary btn-details me-2"><i class="fas fa-info-circle"> Détails</i> </button>
+                            <button class="btn btn-secondary btn-favorite ms-2"><i class="fas fa-heart"></i> Favoris </button>
                     </div>
                 `;
                 seriesContainer.appendChild(card);
@@ -78,3 +72,5 @@ function changePage(pageNumber) {
         })
         .catch(error => console.error('Erreur lors de la récupération des séries :', error));
 }
+
+
