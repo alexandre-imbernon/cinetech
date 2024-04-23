@@ -1,0 +1,5 @@
+/* CSS pour agrandir les cartes au survol */
+.card:hover {
+    transform: scale(1.05); /* Ajustez la valeur selon vos préférences */
+    transition: transform 0.3s ease; /* Ajoute une transition fluide */
+}
