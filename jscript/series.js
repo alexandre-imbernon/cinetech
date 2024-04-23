@@ -25,8 +25,8 @@ function getSeries(pageNumber) {
                     <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top hover-zoom-image" alt="${serie.name}">
                     <div class="card-body d-flex flex-column justify-content-between">
                         <div class="buttons-container d-flex justify-content-center">
-                            <button class="btn btn-secondary btn-details d-none me-2"><i class="fas fa-info-circle"></i> Détails</button>
-                            <button class="btn btn-secondary btn-favorite d-none ml-2"><i class="fas fa-heart"></i> Favoris</button>
+                            <button class="btnD  btn-details d-none me-2"><i class="fas fa-info-circle"></i> Détails</button>
+                            <button class="btn  btn-favorite d-none ml-2"><i class="fas fa-heart"></i> Favoris</button>
                         </div>
                     </div>
                 </div>
@@ -62,8 +62,8 @@ function changePage(pageNumber) {
                     <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top hover-zoom-image" alt="${serie.name}">
                     <div class="card-body d-flex flex-column justify-content-between">
                         <div class="buttons-container d-flex justify-content-center">
-                            <button class="btn btn-secondary btn-details d-none me-2"><i class="fas fa-info-circle"></i> Détails</button>
-                            <button class="btn btn-secondary btn-favorite d-none ml-2"><i class="fas fa-heart"></i> Favoris</button>
+                            <button class="btnD  btn-details d-none me-2"><i class="fas fa-info-circle"></i> Détails</button>
+                            <button class="btnF  btn-favorite d-none ml-2"><i class="fas fa-heart"></i> Favoris</button>
                         </div>
                     </div>
                 </div>

@@ -7,8 +7,25 @@ body{
     transition: transform 0.3s ease;
 }
 
+.card-buttons{
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.card:hover .card-buttons{
+    opacity: 1;
+}
+
 .btn{
-    background-color: rgb(210, 198, 198);
+    background-color: rgb(204, 78, 78);
+    color: white;
+    border-radius: 6px;
+}
+
+.btnD{
+    background-color: rgb(142, 142, 237);
+    color: white;
+    border-radius: 6px;
 }
 
 
