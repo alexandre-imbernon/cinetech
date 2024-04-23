@@ -1,3 +1,4 @@
+// Fonction pour récupérer les données de l'API
 async function fetchApi(url) {
     try {
         const response = await fetch(url);
@@ -9,23 +10,22 @@ async function fetchApi(url) {
     }
 }
 
+// Fonction pour récupérer une série recommandée basée sur le genre
 async function getRecommendedSeries(genreId) {
     const apiKey = '8c4b867188ee47a1d4e40854b27391ec';
     const discoverUrl = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_genres=${genreId}`;
-
     const data = await fetchApi(discoverUrl);
 
     if (data && data.results.length > 0) {
-        // Sélectionner une série aléatoire parmi les résultats
         const randomIndex = Math.floor(Math.random() * data.results.length);
         const series = data.results[randomIndex];
-
         return series.name;
     } else {
         return 'Aucune série recommandée';
     }
 }
 
+// Fonction principale pour récupérer les détails de la série
 async function getSeriesDetails() {
     const serieId = localStorage.getItem('serieId');
     if (!serieId) {
@@ -37,30 +37,31 @@ async function getSeriesDetails() {
     const apiUrl = `https://api.themoviedb.org/3/tv/${serieId}?api_key=${apiKey}&language=fr`;
     const creditsUrl = `https://api.themoviedb.org/3/tv/${serieId}/credits?api_key=${apiKey}&language=fr`;
 
+    // Récupérer les données de la série et les crédits
     const data = await fetchApi(apiUrl);
     const creditsData = await fetchApi(creditsUrl);
 
     if (data && creditsData) {
+        // Extraire les détails de la série
         const serieTitle = data.name || 'Inconnu';  
         const genres = (data.genres.map(genre => genre.name).join(', ')) || 'Inconnu';
         const nationality = (data.origin_country.join(', ')) || 'Inconnu';
         const numberOfSeasons = data.number_of_seasons || 'Inconnu';
         const numberOfEpisodes = data.number_of_episodes || 'Inconnu';
 
+        // Extraire les détails des crédits
         const director = creditsData.crew.find(member => member.job === 'Director');
         const directorName = director ? director.name : 'Inconnu';
-
         let actors = creditsData.cast.slice(0, 5).map(actor => actor.name).join(', ');
         if (actors === '') {
             actors = 'Inconnu';
         }
 
-        // Récupérer l'ID du premier genre de la série, s'il existe
+        // Récupérer une série recommandée du même genre
         const genreId = data.genres.length > 0 ? data.genres[0].id : null;
-
-        // Récupérer une série recommandée du même genre, si un genre est disponible
         const recommendedSeries = genreId ? await getRecommendedSeries(genreId) : 'Aucune série recommandée';
 
+        // Mettre à jour l'interface utilisateur avec les détails de la série
         document.getElementById("details").innerHTML = `
             <h2>${serieTitle}</h2>
             <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" alt="${serieTitle}">
@@ -73,6 +74,7 @@ async function getSeriesDetails() {
             <p>Nationalité : ${nationality}</p>
         `;
 
+        // Mettre à jour l'interface utilisateur avec la série recommandée
         document.getElementById("serieliked").innerText = serieTitle;
         document.getElementById("recommended").innerHTML = `<p>Si vous avez aimé ${serieTitle}, vous aimerez : ${recommendedSeries}</p>`;
     } else {
@@ -80,5 +82,5 @@ async function getSeriesDetails() {
     }
 }
 
+// Appeler la fonction principale
 getSeriesDetails();
-
