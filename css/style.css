@@ -15,10 +15,10 @@
     transition: opacity 0.3s ease-in-out;
 }
 
+
 .card:hover .card-buttons {
     opacity: 1;
 }
-
 
 .comment {
     font-family: "Platypi", serif;
