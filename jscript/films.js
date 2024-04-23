@@ -16,13 +16,17 @@ async function getFilms(page = 1) {
                 <div class="card h-100">
                     <img src="https://image.tmdb.org/t/p/w500${film.poster_path}" class="card-img-top" alt="${film.title}">
                     <div class="card-body">
-                       
+                        <div class="card-buttons">
+                            <button class="btn btn-primary btn-details" onclick="showDetails(${film.id})">Détails</button>
+                            <button class="btn btn-danger btn-favorite">Favoris</button>
+                        </div>
                     </div>
                 </div>
             `;
             filmsContainer.appendChild(card);
         });
-
+        
+        
         // Pagination
         const pagination = document.getElementById('pagination');
         pagination.innerHTML = '';

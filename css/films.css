@@ -3,3 +3,13 @@
     transform: scale(1.05); /* Ajustez la valeur selon vos préférences */
     transition: transform 0.3s ease; /* Ajoute une transition fluide */
 }
+
+
+.card-buttons {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.card:hover .card-buttons {
+    opacity: 1;
+}
