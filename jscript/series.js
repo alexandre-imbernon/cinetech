@@ -1,3 +1,5 @@
+// series.js
+
 // Variables globales pour la pagination
 let currentPage = 1; // Numéro de la page actuelle
 const seriesPerPage = 6; // Nombre de séries par page
@@ -19,18 +21,16 @@ function getSeries(pageNumber) {
 
                 // Modification de la structure de la carte pour une apparence améliorée
                 card.innerHTML = `
-                    <div class="card h-100 shadow">
-                        <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top" alt="${serie.name}">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <div>
-                                <h5 class="card-title">${serie.name}</h5>
-                                <p class="card-text">${serie.overview}</p>
-                            </div>
-                            <div>
-                                <a href="#" class="btn btn-secondary mt-auto">Détails</a>
-                                <a href="#" class="btn btn-primary mt-auto">Ajouter un commentaire</a>
-                            </div>
-                        </div>
+                <div class="card h-100 shadow hover-effect">
+                        <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top hover-zoom-image" alt="${serie.name}">
+                        <div class="card-body d-flex flex-column justify-content-between"></div>
+                            <div class="buttons-container">
+                            <button class="btn btn-secondary btn-details">Détails</button>
+                            <button class="btn btn-primary btn-favorite">Favoris</button>
+                            <button class="btn btn-primary btn-play">Lecture du film</button>
+                    </div>
+
+                        
                     </div>
                 `;
                 seriesContainer.appendChild(card);
@@ -58,19 +58,14 @@ function changePage(pageNumber) {
                 const card = document.createElement('div');
                 card.classList.add('col-md-3', 'mb-4');
 
-                
                 // Modification de la structure de la carte pour une apparence améliorée
                 card.innerHTML = `
                     <div class="card h-100 shadow">
                         <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top" alt="${serie.name}">
                         <div class="card-body d-flex flex-column justify-content-between">
-                            <div>
-                                <h5 class="card-title">${serie.name}</h5>
-                                <p class="card-text">${serie.overview}</p>
-                            </div>
+                            
                             <div class="d-flex justify-content-between">
-                                <a href="#" class="btn btn-secondary mt-auto">Détails</a>
-                                <a href="#" class="btn btn-primary mt-auto">Ajouter un commentaire</a>
+                                
                             </div>
                         </div>
                     </div>
@@ -83,4 +78,3 @@ function changePage(pageNumber) {
         })
         .catch(error => console.error('Erreur lors de la récupération des séries :', error));
 }
-
