@@ -4,6 +4,10 @@
     transition: transform 0.3s ease; /* Ajoute une transition fluide */
 }
 
+.card {
+    background-color: black;
+}
+
 
 .card-buttons {
     opacity: 0;
@@ -20,4 +24,14 @@
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
+  color: white;
+}
+
+body {
+    background-color: black;
+}
+
+.page-link {
+    background-color: black;
+    color: red;
 }
