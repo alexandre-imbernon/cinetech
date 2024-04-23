@@ -12,9 +12,11 @@ const creditsUrl = `https://api.themoviedb.org/3/tv/${serieId}/credits?api_key=$
 fetch(apiUrl)
     .then(response => response.json())
     .then(data => {
-        const serieTitle = data.name;  
-        const genres = data.genres.map(genre => genre.name).join(', ');
-        const nationality = data.origin_country.join(', ');
+        const serieTitle = data.name || 'Inconnu';  
+        const genres = (data.genres.map(genre => genre.name).join(', ')) || 'Inconnu';
+        const nationality = (data.origin_country.join(', ')) || 'Inconnu';
+        const numberOfSeasons = data.number_of_seasons || 'Inconnu';
+        const numberOfEpisodes = data.number_of_episodes || 'Inconnu';
 
         // Appel à l'API TMDB pour récupérer les crédits de la série
         fetch(creditsUrl)
@@ -22,14 +24,19 @@ fetch(apiUrl)
             .then(creditsData => {
                 const director = creditsData.crew.find(member => member.job === 'Director');
                 const directorName = director ? director.name : 'Inconnu';
-                const actors = creditsData.cast.slice(0, 5).map(actor => actor.name).join(', ');
+
+                // Récupérer les acteurs
+                let actors = creditsData.cast.slice(0, 5).map(actor => actor.name).join(', ');
+                if (actors === '') {
+                    actors = 'Inconnu';
+                }
 
                 document.getElementById("details").innerHTML = `
                     <h2>${serieTitle}</h2>
                     <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" alt="${serieTitle}">
-                    <p>${data.overview}</p>
-                    <p>Nombre de saisons : ${data.number_of_seasons}</p>
-                    <p>Nombre d'épisodes : ${data.number_of_episodes}</p>
+                    <p>${data.overview || 'Aucune description disponible'}</p>
+                    <p>Nombre de saisons : ${numberOfSeasons}</p>
+                    <p>Nombre d'épisodes : ${numberOfEpisodes}</p>
                     <p>Genre : ${genres}</p>
                     <p>Réalisateur : ${directorName}</p>
                     <p>Acteurs : ${actors}</p>
