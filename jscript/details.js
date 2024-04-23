@@ -17,18 +17,18 @@ fetch(apiUrl)
     })
     .then(data => {  // Maintenant vous pouvez utiliser data
         const serieTitle = data.name;  
+        const genres = data.genres.map(genre => genre.name).join(', ');
+
         document.getElementById("details").innerHTML = `
             <h2>${serieTitle}</h2>
             <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" alt="${serieTitle}">
             <p>${data.overview}</p>
             <p>Nombre de saisons : ${data.number_of_seasons}</p>
             <p>Nombre d'épisodes : ${data.number_of_episodes}</p>
-            <p>Genre : </p>
+            <p>Genre : ${genres}</p>
             <p>Réalisateur : </p>
             <p>Acteurs :</p>
             <p>Nationalité : </p>
-            
-            
         `;
 
         document.getElementById("serieliked").innerText = serieTitle;
