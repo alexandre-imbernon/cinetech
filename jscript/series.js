@@ -25,9 +25,9 @@ function getSeries(pageNumber) {
                         <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top hover-zoom-image" alt="${serie.name}">
                         <div class="card-body d-flex flex-column justify-content-between"></div>
                             <div class="buttons-container">
-                            <button class="btn btn-secondary btn-details">Détails</button>
-                            <button class="btn btn-primary btn-favorite">Favoris</button>
-                            <button class="btn btn-primary btn-play">Lecture du film</button>
+                            <button class="btn btn-secondary btn-details"><i class="fas fa-info-circle"></i> </button>
+                            <button class="btn btn-secondary btn-favorite"><i class="fas fa-heart"></i> </button>
+                            <button class="btn btn-secondary btn-play"><i class="fas fa-play"></i> </button>
                     </div>
 
                         
