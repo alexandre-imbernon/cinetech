@@ -16,29 +16,34 @@ fetch(apiUrl)
         const genres = data.genres.map(genre => genre.name).join(', ');
 
         // Appel à l'API TMDB pour récupérer les crédits de la série
-        fetch(creditsUrl)
-            .then(response => response.json())
-            .then(creditsData => {
-                const director = creditsData.crew.find(member => member.job === 'Director');
-                const directorName = director ? director.name : 'Inconnu';
+ // Appel à l'API TMDB pour récupérer les crédits de la série
+fetch(creditsUrl)
+.then(response => response.json())
+.then(creditsData => {
+    const director = creditsData.crew.find(member => member.job === 'Director');
+    const directorName = director ? director.name : 'Inconnu';
 
-                document.getElementById("details").innerHTML = `
-                    <h2>${serieTitle}</h2>
-                    <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" alt="${serieTitle}">
-                    <p>${data.overview}</p>
-                    <p>Nombre de saisons : ${data.number_of_seasons}</p>
-                    <p>Nombre d'épisodes : ${data.number_of_episodes}</p>
-                    <p>Genre : ${genres}</p>
-                    <p>Réalisateur : ${directorName}</p>
-                    <p>Acteurs :</p>
-                    <p>Nationalité : </p>
-                `;
+    // Récupérer les acteurs
+    const actors = creditsData.cast.slice(0, 5).map(actor => actor.name).join(', ');
 
-                document.getElementById("serieliked").innerText = serieTitle;
-            })
-            .catch(error => {
-                console.error('Erreur lors de la récupération des crédits de la série :', error);
-            });
+    document.getElementById("details").innerHTML = `
+        <h2>${serieTitle}</h2>
+        <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" alt="${serieTitle}">
+        <p>${data.overview}</p>
+        <p>Nombre de saisons : ${data.number_of_seasons}</p>
+        <p>Nombre d'épisodes : ${data.number_of_episodes}</p>
+        <p>Genre : ${genres}</p>
+        <p>Réalisateur : ${directorName}</p>
+        <p>Acteurs : ${actors}</p>
+        <p>Nationalité : </p>
+    `;
+
+    document.getElementById("serieliked").innerText = serieTitle;
+})
+.catch(error => {
+    console.error('Erreur lors de la récupération des crédits de la série :', error);
+});
+
     })
     .catch(error => {
         console.error('Erreur lors de la récupération des détails de la série :', error);
