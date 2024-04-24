@@ -25,7 +25,7 @@ async function getSeries() {
                             <h5 class="card-title">${serie.name}</h5>
                             <p class="card-text">${serie.overview}</p>
                         </div>
-                        <a href="#" class="btn btn-secondary mt-auto" onclick="showDetails(${serie.id})">Détails</a>
+                        <a href="../html/details.html?serie_id=${serie.id}" class="btn btn-secondary mt-auto" onclick="showDetails(${serie.id})">Détails</a>
                     </div>
                 </div>
             `;
