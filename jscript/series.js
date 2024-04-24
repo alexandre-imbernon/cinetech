@@ -53,9 +53,6 @@ function removeFromFavorites(serieId) {
 }
 
 
-// Appel de la fonction pour récupérer les séries
-getSeries();
-
 async function getSeries(page = 1) {
     try {
         const apiKey = '8c4b867188ee47a1d4e40854b27391ec';
@@ -95,7 +92,26 @@ async function getSeries(page = 1) {
         // Ajouter un événement au bouton "Favoris"
         document.getElementById('favoriteButton').addEventListener('click', displayFavoritesModal);
         
+        // Pagination
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+        const totalPages = 10; // Nombre total de pages de pagination
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement('li');
+            li.classList.add('page-item');
+            const link = document.createElement('a');
+            link.classList.add('page-link');
+            link.href = '#';
+            link.textContent = i;
+            link.addEventListener('click', () => {
+                getSeries(i); // Appel de la fonction avec le numéro de page correspondant
+            });
+            li.appendChild(link);
+            pagination.appendChild(li);
+        }
     } catch (error) {
         console.error('Erreur lors de la récupération des séries :', error);
     }
 }
+// Appel de la fonction pour récupérer les séries
+getSeries();
