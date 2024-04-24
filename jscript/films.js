@@ -73,4 +73,3 @@ function showDetails(id) {
 
 // Appeler la fonction pour récupérer les films au chargement de la page
 getFilms(); // Récupération des films au chargement de la page
-

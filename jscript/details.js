@@ -1,3 +1,4 @@
+// Clé API et URL de base pour les images
 const apiKey = '8c4b867188ee47a1d4e40854b27391ec';
 const baseImageUrl = 'https://image.tmdb.org/t/p/w500';
 const urlParams = new URLSearchParams(window.location.search);
@@ -12,6 +13,27 @@ async function fetchApi(url) {
         console.error('Erreur lors de la récupération des données de l\'API :', error);
         return null;
     }
+}
+// Fonction pour obtenir les commentaires à partir de l'API TMDB
+async function getComments(endpoint, itemId) {
+    const commentsUrl = `https://api.themoviedb.org/3/${endpoint}/${itemId}/reviews?api_key=${apiKey}`;
+    const commentsData = await fetchApi(commentsUrl);
+
+    if (!commentsData || !commentsData.results || commentsData.results.length === 0) {
+        return 'Aucun commentaire disponible.';
+    }
+
+    // Afficher les commentaires
+    return commentsData.results
+        .map((comment) => {
+            const author = comment.author || 'Anonyme';
+            const content = comment.content || 'Pas de contenu.';
+            return `<div class="comment">
+                        <strong>Par: ${author}</strong>
+                        <p>${content}</p>
+                    </div>`;
+        })
+        .join('');
 }
 
 // Fonction générique pour extraire et afficher les détails d'un film ou d'une série
@@ -58,6 +80,9 @@ async function getDetails(endpoint, itemId, isSeries = true) {
         <p>Acteurs : ${actors}</p>
         <p>Nationalité : ${nationality}</p>
     `;
+   // Obtenir et afficher les commentaires
+   const commentsHtml = await getComments(endpoint, itemId);
+   document.getElementById("comments").innerHTML = commentsHtml;
 
     // Récupérer une recommandation
     if (data.genres && data.genres.length > 0) {
@@ -94,3 +119,4 @@ const movieId = urlParams.get("film_id");
 if (movieId) {
     getDetails('movie', movieId, false);
 }
+
