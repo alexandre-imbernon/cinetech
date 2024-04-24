@@ -19,12 +19,19 @@ function displaySuccessModal(message) {
 }
 
 
-// Fonction pour afficher une modal avec les favoris
+// Fonction pour afficher les favoris dans la modale avec des boutons de suppression
 function displayFavoritesModal() {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const favoritesModalBody = document.getElementById('favorites-modal-body');
     if (favorites.length > 0) {
-        favoritesModalBody.innerHTML = favorites.map(serie => `<p>${serie.title}</p>`).join('');
+        // Créer le contenu HTML pour chaque série favorite avec un bouton de suppression
+        const favoritesHTML = favorites.map(serie => `
+            <div class="favorite-item">
+                <p>${serie.title}</p>
+                <button class="btn btn-danger btn-sm" onclick="removeFromFavorites(${serie.id})">Supprimer</button>
+            </div>
+        `).join('');
+        favoritesModalBody.innerHTML = favoritesHTML;
     } else {
         favoritesModalBody.innerHTML = '<p>Aucune série favorite.</p>';
     }
@@ -33,6 +40,18 @@ function displayFavoritesModal() {
     const favoritesModal = new bootstrap.Modal(document.getElementById('favoritesModal'));
     favoritesModal.show();
 }
+
+// Fonction pour supprimer une série des favoris
+function removeFromFavorites(serieId) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    // Filtrer les favoris pour obtenir une nouvelle liste sans la série à supprimer
+    favorites = favorites.filter(serie => serie.id !== serieId);
+    // Mettre à jour les favoris dans le stockage local
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    // Réafficher la liste des favoris mise à jour dans la modale
+    displayFavoritesModal();
+}
+
 
 // Appel de la fonction pour récupérer les séries
 getSeries();
