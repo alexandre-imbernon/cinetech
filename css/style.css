@@ -11,7 +11,7 @@
 
 .navbar {
     transition: background-color 0.3s ease-in-out; /* Transition douce pour la couleur de fond sur 0.5 secondes */
-    padding: 5px;;
+    padding: 0!important;
 }
 
 .btn-primary{
@@ -124,4 +124,8 @@ footer .container {
 .my-5 {
     margin-bottom: 0!important;
     padding-top: 0!important;
+}
+
+.mb-3 {
+    margin-top: 1rem !important;
 }
