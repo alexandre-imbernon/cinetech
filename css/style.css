@@ -96,13 +96,6 @@ footer {
     color: white; /* Couleur du texte du footer */
     padding: 20px 0; /* Ajoute de l'espace en haut et en bas du footer */
 }
-
-.bg-dark {
-    /* Ajout d'une image en arrière-plan */
-    background-image: url("./images/footer.png");
-    background-size: cover; /* Pour que l'image couvre l'ensemble de l'espace */
-    background-position: center; /* Centrer l'image */
-}
   
 /* Container du footer */
 footer .container {
