@@ -14,6 +14,27 @@
     padding: 5px;;
 }
 
+.btn-primary{
+    color: rgb(255, 255, 255);
+    background-color: #212529;
+    border-color: #212529;
+
+}
+
+.btn-primary:hover{
+    background-color: rgb(24, 170, 170);
+}
+
+.btn-outline-success {
+    color: rgb(255, 255, 255);
+    background-color: #212529;
+    border-color: #212529;
+}
+
+.btn-outline-success:hover{
+    background-color: rgb(24, 170, 170);
+}
+
 /* Dans votre feuille de style ou dans une balise <style> */
 .nav-link {
     color: white; /* Définit la couleur du texte des liens de navigation à blanc */
@@ -76,12 +97,11 @@ footer {
     padding: 20px 0; /* Ajoute de l'espace en haut et en bas du footer */
 }
 
-footer.bg-dark {
+.bg-dark {
     /* Ajout d'une image en arrière-plan */
-    background-image: url('images/footer.svg');
+    background-image: url("./images/footer.png");
     background-size: cover; /* Pour que l'image couvre l'ensemble de l'espace */
     background-position: center; /* Centrer l'image */
-    background-repeat: no-repeat; /* Éviter que l'image ne se répète */
 }
   
 /* Container du footer */
@@ -102,3 +122,13 @@ footer .container {
     height: 150px;
 }
   
+
+.py-5 {
+    padding-top: 1px!important;
+    padding-bottom: 1px!important;
+}
+
+.my-5 {
+    margin-bottom: 0!important;
+    padding-top: 0!important;
+}
