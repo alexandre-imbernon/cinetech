@@ -86,6 +86,7 @@ async function getSeries(page = 1) {
             // Ajout de la card au container principal
             seriesContainer.appendChild(card);
 
+            
             // Événement de survol pour afficher les commentaires
             card.addEventListener('mouseenter', async () => {
                 // Récupération et affichage des commentaires
