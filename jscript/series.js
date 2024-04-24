@@ -18,6 +18,7 @@ function displaySuccessModal(message) {
     successModal.show();
 }
 
+
 // Fonction pour afficher une modal avec les favoris
 function displayFavoritesModal() {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
