@@ -59,54 +59,54 @@ async function getFilms(page = 1) {
             });
         });
         
-       // Fonction de recherche par genre
-document.getElementById('searchButton').addEventListener('click', async () => {
-    const searchTerm = document.getElementById('searchInput').value;
-    let searchUrl;
+        // Fonction de recherche par genre
+            document.getElementById('searchButton').addEventListener('click', async () => {
+        const searchTerm = document.getElementById('searchInput').value;
+        let searchUrl;
 
-    // Vérifie si le terme de recherche est un genre
-    const genreId = getGenreId(searchTerm);
-    
-    if (genreId) {
-        // Si c'est un genre, recherche par genre
-        searchUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=fr&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${genreId}`;
-    } else {
-        // Sinon, recherche normale
-        searchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&language=fr&query=${searchTerm}`;
-    }
+        // Vérifie si le terme de recherche est un genre
+        const genreId = getGenreId(searchTerm);
+        
+        if (genreId) {
+            // Si c'est un genre, recherche par genre
+            searchUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=fr&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${genreId}`;
+        } else {
+            // Sinon, recherche normale
+            searchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&language=fr&query=${searchTerm}`;
+        }
 
-    try {
-        const response = await fetch(searchUrl);
-        const searchData = await response.json();
+        try {
+            const response = await fetch(searchUrl);
+            const searchData = await response.json();
 
-        // Efface le contenu précédent avant d'afficher les nouveaux résultats
-        filmsContainer.innerHTML = '';
+            // Efface le contenu précédent avant d'afficher les nouveaux résultats
+            filmsContainer.innerHTML = '';
 
-        // Affiche les résultats de la recherche
-        searchData.results.forEach(result => {
-            const card = document.createElement('div');
-            card.classList.add('col-md-3', 'mb-4');
-            card.innerHTML = `
-                <div class="card h-100">
-                    <img src="https://image.tmdb.org/t/p/w500${result.poster_path}" class="card-img-top" alt="${result.title}">
-                    <div class="card-body">
-                        <div class="card-buttons">
-                            <a href="lien_de_votre_page" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
-                            <button class="btn btn-danger btn-favorite font-monospace"><i class="fas fa-heart"></i>Favoris</button>
+            // Affiche les résultats de la recherche
+            searchData.results.forEach(result => {
+                const card = document.createElement('div');
+                card.classList.add('col-md-3', 'mb-4');
+                card.innerHTML = `
+                    <div class="card h-100">
+                        <img src="https://image.tmdb.org/t/p/w500${result.poster_path}" class="card-img-top" alt="${result.title}">
+                        <div class="card-body">
+                            <div class="card-buttons">
+                                <a href="lien_de_votre_page" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
+                                <button class="btn btn-danger btn-favorite font-monospace"><i class="fas fa-heart"></i>Favoris</button>
+                            </div>
+                            <!-- Conteneur pour les commentaires -->
+                            <div class="comments-container"></div>
                         </div>
-                        <!-- Conteneur pour les commentaires -->
-                        <div class="comments-container"></div>
                     </div>
-                </div>
-            `;
+                `;
 
-            // Ajout de la card au container principal
-            filmsContainer.appendChild(card);
-        });
-    } catch (error) {
-        console.error('Erreur lors de la recherche de films :', error);
-    }
-});
+                // Ajout de la card au container principal
+                filmsContainer.appendChild(card);
+            });
+        } catch (error) {
+            console.error('Erreur lors de la recherche de films :', error);
+        }
+    });
 
 // Fonction pour obtenir l'ID du genre à partir du nom du genre
 function getGenreId(genreName) {
@@ -118,8 +118,10 @@ function getGenreId(genreName) {
         "drame": 18,
         "science-fiction": 878,
         "thriller": 53,
-        "horreur": 27
-        // Ajoutez d'autres genres selon vos besoins
+        "horreur": 27,
+        "guerre" : 10725,
+        "documentaire" : 99,
+        "musique": 10402
     };
 
     // Convertit le nom du genre en minuscules pour correspondre
@@ -154,7 +156,6 @@ function getGenreId(genreName) {
 }
 
 
-        
     
 
 // Appel de la fonction pour récupérer les films au chargement de la page
