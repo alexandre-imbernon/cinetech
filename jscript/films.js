@@ -124,5 +124,7 @@ async function getFilms(page = 1) {
     }
 }
 
+    
+
 // Appel de la fonction pour récupérer les films au chargement de la page
 getFilms();
