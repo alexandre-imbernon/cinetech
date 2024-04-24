@@ -1,3 +1,21 @@
+// Sélectionnez la barre de navigation
+const navbar = document.querySelector('.navbar');
+
+// Fonction pour vérifier la position de défilement et ajuster la barre de navigation
+function checkScroll() {
+    // Si l'utilisateur a fait défiler la page, supprimer la classe 'fixed-top' de la barre de navigation
+    if (window.scrollY > 684) {
+        navbar.classList.remove('bg-transparent');
+        navbar.classList.add('bg-dark');
+    } else {
+        navbar.classList.remove('bg-dark');
+        navbar.classList.add('bg-transparent');
+    }
+}
+
+// Ajoutez un écouteur d'événements pour appeler 'checkScroll' chaque fois que l'utilisateur fait défiler la page
+window.addEventListener('scroll', checkScroll);
+
 // Attendre que le DOM soit chargé avant de commencer
 document.addEventListener("DOMContentLoaded", function() {
   // L'API key

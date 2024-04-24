@@ -1,9 +1,4 @@
-body{
-    background-color: #2a2e32;
-}
-
 /* HEADER */
-
 /* Style pour positionner le logo Cinetech en haut à gauche du carrousel */
 .carousel .navbar-brand {
     position: absolute; /* Positionne l'élément en position absolue */
@@ -14,18 +9,27 @@ body{
     padding: 0; /* Supprime les espacements internes de l'élément */
 }
 
-
-.link{
-    color: white;
-    display:inline-flex;
-    justify-content: flex-end;
-    text-decoration: none;
-    font-size: 1.2rem;
-    margin-right: 1rem;
+.navbar {
+    transition: background-color 0.3s ease-in-out; /* Transition douce pour la couleur de fond sur 0.5 secondes */
+    padding: 5px;;
 }
 
-.link{
-    align-items: end;
+/* Dans votre feuille de style ou dans une balise <style> */
+.nav-link {
+    color: white; /* Définit la couleur du texte des liens de navigation à blanc */
+}
+
+.nav-link:hover{
+    color: whitesmoke;
+}
+
+.navbar-expand-lg .navbar-nav {
+    flex-direction: row;
+    justify-content: right;
+}
+
+a{
+    color: white;
 }
 
 /* Style pour le logo Cinetech */
@@ -33,7 +37,6 @@ body{
     max-height: 150px; /* Ajuste la hauteur maximale de l'image du logo */
     max-width: auto; /* Ajuste la largeur maximale de l'image du logo */
 }
-
 
 .carousel-indicators{
     color: white;
@@ -47,9 +50,13 @@ body{
     margin-left: 20px; /* Ajoute de l'espace entre les éléments du menu de navigation */
 }
 
-.logo1{
-    width: 250px;
-    height: 250px;
+#logo1{
+    width: 100px;
+    height: 100px;
+}
+
+button.btn.btn-primary {
+    margin: 15px;
 }
 
 .text-white{
@@ -63,17 +70,18 @@ h2{
     color:white;
 }
 
-
-
-
-
-
-
 /* Footer */
 footer {
-    background-image: url('images/footer.svg');
     color: white; /* Couleur du texte du footer */
     padding: 20px 0; /* Ajoute de l'espace en haut et en bas du footer */
+}
+
+footer.bg-dark {
+    /* Ajout d'une image en arrière-plan */
+    background-image: url('images/footer.svg');
+    background-size: cover; /* Pour que l'image couvre l'ensemble de l'espace */
+    background-position: center; /* Centrer l'image */
+    background-repeat: no-repeat; /* Éviter que l'image ne se répète */
 }
   
 /* Container du footer */
@@ -87,5 +95,10 @@ footer .container {
 .footer-bottom {
     text-align: center; /* Centre le texte horizontalement */
     margin-top: 20px; /* Ajoute un espace entre le contenu principal et le texte en bas */
+}
+
+#logo2{
+    width: 150px;
+    height: 150px;
 }
   
