@@ -9,6 +9,10 @@
     padding: 0; /* Supprime les espacements internes de l'élément */
 }
 
+.carousel-indicators [data-bs-target]{
+    background-clip: border-box!important;
+}
+
 .navbar {
     transition: background-color 0.3s ease-in-out; /* Transition douce pour la couleur de fond sur 0.5 secondes */
     padding: 0!important;
