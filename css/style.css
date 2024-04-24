@@ -1,0 +1,91 @@
+body{
+    background-color: #2a2e32;
+}
+
+/* HEADER */
+
+/* Style pour positionner le logo Cinetech en haut à gauche du carrousel */
+.carousel .navbar-brand {
+    position: absolute; /* Positionne l'élément en position absolue */
+    top: 10px; /* Ajuste la position en haut (vous pouvez modifier la valeur selon vos besoins) */
+    left: 10px; /* Ajuste la position à gauche (vous pouvez modifier la valeur selon vos besoins) */
+    z-index: 100; /* Assure que le logo soit au-dessus du carrousel */
+    margin: 0; /* Supprime les marges de l'élément */
+    padding: 0; /* Supprime les espacements internes de l'élément */
+}
+
+
+.link{
+    color: white;
+    display:inline-flex;
+    justify-content: flex-end;
+    text-decoration: none;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+}
+
+.link{
+    align-items: end;
+}
+
+/* Style pour le logo Cinetech */
+.carousel .navbar-brand img {
+    max-height: 150px; /* Ajuste la hauteur maximale de l'image du logo */
+    max-width: auto; /* Ajuste la largeur maximale de l'image du logo */
+}
+
+
+.carousel-indicators{
+    color: white;
+}
+
+.navbar {
+    padding: 20px; /* Ajoute de l'espace à l'intérieur de la barre de navigation */
+}
+
+.navbar-nav .nav-item {
+    margin-left: 20px; /* Ajoute de l'espace entre les éléments du menu de navigation */
+}
+
+.logo1{
+    width: 250px;
+    height: 250px;
+}
+
+.text-white{
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+  
+/* MAIN */
+
+h2{
+    color:white;
+}
+
+
+
+
+
+
+
+/* Footer */
+footer {
+    background-image: url('images/footer.svg');
+    color: white; /* Couleur du texte du footer */
+    padding: 20px 0; /* Ajoute de l'espace en haut et en bas du footer */
+}
+  
+/* Container du footer */
+footer .container {
+    display: flex; /* Utilise Flexbox pour la disposition */
+    justify-content: space-between; /* Répartit l'espace entre les éléments */
+    align-items: center; /* Aligne les éléments verticalement au centre */
+}
+
+/* Texte "Tous droits réservés" centré en dessous des deux */
+.footer-bottom {
+    text-align: center; /* Centre le texte horizontalement */
+    margin-top: 20px; /* Ajoute un espace entre le contenu principal et le texte en bas */
+}
+  
