@@ -11,12 +11,14 @@
 
 .card-buttons {
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    visibility: hidden; /* Ajoutez cette ligne pour cacher les boutons */
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s; /* Ajoutez la transition de visibilité */
 }
-
 
 .card:hover .card-buttons {
     opacity: 1;
+    visibility: visible; /* Ajoutez cette ligne pour afficher les boutons */
+    transition-delay: 0s; /* Réinitialisez le délai de transition de visibilité */
 }
 
 .comment {

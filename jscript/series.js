@@ -54,15 +54,16 @@ function removeFromFavorites(serieId) {
 }
 
 
+
 async function getSeries(page = 1) {
     try {
         const apiKey = '8c4b867188ee47a1d4e40854b27391ec';
-        const apiUrl = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&language=fr&page=${page}&sort_by=popularity.desc`;
+        const apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=fr&page=${page}`;
 
         const response = await fetch(apiUrl);
         const data = await response.json();
 
-        const seriesContainer = document.getElementById('moviesContainer');
+        const seriesContainer = document.getElementById('seriesContainer');
         seriesContainer.innerHTML = ''; // Efface le contenu précédent
         
         data.results.forEach(async serie => {
@@ -88,14 +89,22 @@ async function getSeries(page = 1) {
             // Événement de survol pour afficher les commentaires
             card.addEventListener('mouseenter', async () => {
                 // Récupération et affichage des commentaires
-                const reviewsUrl = `https://api.themoviedb.org/3/movie/${serie.id}/reviews?api_key=${apiKey}&language=fr&page=1`;
-                const reviewsResponse = await fetch(reviewsUrl);
-                const reviewsData = await reviewsResponse.json();
-        
+                const reviewsUrl = `https://api.themoviedb.org/3/tv/${serie.id}/reviews?language=en-FR&page=1`;
+                console.log(serie.id);
+                const options = {
+                    method: 'GET',
+                    headers: {
+                      accept: 'application/json',
+                      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiZjdlOTkyNzRlNmQxZmYwZGRmOGZkYjFlNmI5YThlNyIsInN1YiI6IjY2Mjc2MmViN2E5N2FiMDE3ZDkwNWUwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.WJsGK1qCQ4bw8NgCUU2_PH5e6vapJxd4NeYZX3JbugU'
+                    }
+                };
+                const reviewsResponse = await fetch(reviewsUrl, options);
+                const reviewsData = await reviewsResponse.json();        
                 const commentsContainer = card.querySelector('.comments-container');
                 commentsContainer.innerHTML = ''; // Efface les commentaires précédents
         
                 reviewsData.results.forEach(review => {
+                    console.log(review);
                     const comment = document.createElement('div');
                     comment.classList.add('comment');
                     comment.innerHTML = `
