@@ -13,8 +13,23 @@
     background-clip: border-box!important;
 }
 
+ul .navbar-nav{
+    justify-content: flex-end!important;
+}
+
+/*Modal connexion*/
+.modal-backdrop.show{
+    opacity: 0;
+}
+
+/*Recherche*/
+#resultsContainer {
+    max-height: 300px; /* Vous pouvez ajuster la hauteur maximale selon vos besoins */
+    overflow-y: auto; /* Activer le défilement vertical si nécessaire */
+}
+
 .navbar {
-    transition: background-color 0.3s ease-in-out; /* Transition douce pour la couleur de fond sur 0.5 secondes */
+    transition: background-color 0.3s ease-in-out; /* Transition douce pour la couleur de fond sur 0.3 secondes */
     padding: 0!important;
 }
 
@@ -39,7 +54,6 @@
     background-color: rgb(24, 170, 170);
 }
 
-/* Dans votre feuille de style ou dans une balise <style> */
 .nav-link {
     color: white; /* Définit la couleur du texte des liens de navigation à blanc */
 }
