@@ -2,6 +2,16 @@
 const apiKey = '8c4b867188ee47a1d4e40854b27391ec';
 const baseImageUrl = 'https://image.tmdb.org/t/p/w500';
 const urlParams = new URLSearchParams(window.location.search);
+// Récupérer les identifiants de série et de film depuis l'URL
+const serieId = urlParams.get("serie_id");
+if (serieId) {
+    getDetails('tv', serieId, true);
+}
+
+const movieId = urlParams.get("film_id");
+if (movieId) {
+    getDetails('movie', movieId, false);
+}
 
 // Fonction générique pour récupérer des données d'une API
 async function fetchApi(url) {
@@ -157,13 +167,35 @@ function replyToComment(index) {
     }
 }
 
-// Récupérer les identifiants de série et de film depuis l'URL
-const serieId = urlParams.get("serie_id");
-if (serieId) {
-    getDetails('tv', serieId, true);
+// Fonction pour rediriger vers la page de détails avec l'ID de la série
+function showDetails(id) {
+    localStorage.setItem('serieId', id); // Stocker l'ID de la série dans le localStorage
+    window.location.href = 'details.html'; // Rediriger vers la page de détails
 }
 
-const movieId = urlParams.get("film_id");
-if (movieId) {
-    getDetails('movie', movieId, false);
+// Appeler la fonction pour récupérer les séries au chargement de la page
+getSeries(); // Récupération des séries au chargement de la page
+
+// Fonction asynchrone pour afficher les détails d'une série sur la page "details.html"
+async function displaySerieDetails() {
+    const serieId = localStorage.getItem('serieId'); // Récupérer l'ID de la série du localStorage
+    const apiUrl = `https://api.themoviedb.org/3/tv/${serieId}?api_key=${apiKey}&language=fr`;
+
+    try {
+        const response = await fetch(apiUrl); // Attente de la réponse du fetch
+        const data = await response.json();  // Attente de la conversion en JSON
+
+        const detailsElement = document.getElementById('details'); // Sélection de l'élément pour afficher les détails
+
+        detailsElement.innerHTML = `
+            <h2>${data.name}</h2>
+            <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" alt="${data.name}">
+            <p>${data.overview}</p>
+            <p>Nombre de saisons : ${data.number_of_seasons}</p>
+            <p>Nombre d'épisodes : ${data.number_of_episodes}</p>
+        `;
+
+    } catch (error) {
+        console.error('Erreur lors de la récupération des détails de la série :', error);
+    }
 }

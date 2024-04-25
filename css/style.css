@@ -1,0 +1,74 @@
+/* CSS pour agrandir les cartes au survol */
+.card:hover {
+    transform: scale(1.05); /* Ajustez la valeur selon vos préférences */
+    transition: transform 0.3s ease; /* Ajoute une transition fluide */
+}
+
+.card {
+    background-color: black;
+}
+
+
+.card-buttons {
+    opacity: 0;
+    visibility: hidden; /* Ajoutez cette ligne pour cacher les boutons */
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s; /* Ajoutez la transition de visibilité */
+}
+
+.card:hover .card-buttons {
+    opacity: 1;
+    visibility: visible; /* Ajoutez cette ligne pour afficher les boutons */
+    transition-delay: 0s; /* Réinitialisez le délai de transition de visibilité */
+}
+
+.comment {
+    font-family: "Platypi", serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  color: white;
+}
+
+body {
+    background-color: black;
+}
+
+.page-link {
+    background-color: black;
+    color: white;
+}
+
+/*CSS DES MODALES*/
+
+/* Style pour la modal */
+.modal-content {
+    background-color: #faf9f8; /* Couleur de fond */
+    border-radius: 10px; /* Coins arrondis */
+}
+
+.modal-header {
+    background-color: #e3be70; /* Couleur de fond de l'en-tête */
+    border-bottom: none; /* Supprimer la bordure inférieure */
+}
+
+.modal-body {
+    padding: 20px; /* Espacement intérieur */
+}
+
+/* Style pour les boutons */
+.btn-primary {
+    background-color: #837ae3; /* Couleur de fond des boutons primaires */
+}
+
+.btn-secondary,
+.btn-danger {
+    background-color: #d76d78; /* Couleur de fond des boutons secondaires et de suppression */
+    border-color: #dc3545; /* Couleur de la bordure des boutons secondaires et de suppression */
+}
+
+/* Hover sur les boutons */
+.btn-secondary:hover,
+.btn-danger:hover {
+    background-color: #57ad65; /* Couleur de fond au survol */
+}
+

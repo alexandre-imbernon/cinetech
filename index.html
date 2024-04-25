@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinetech</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"-->
+    <link href="https://fonts.googleapis.com/css?family=Lacquer" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/tom.css">
+</head>
+
+<body>
+    <header>
+        <div id="headerCarousel" class="carousel slide" data-bs-ride="carousel">
+            <nav class="navbar navbar-expand-lg item-end bg-transparent fixed-top text-white">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <img id="logo1" src="images/Cinetech.svg">
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="#">Accueil</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/html/films.html">Films</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/html/serie.html">Séries</a>
+                            </li>
+
+                           
+                        
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-primary">Connexion</button>
+                      </div>
+
+                      <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <input id="searchInput" class="form-control me-2" type="search" placeholder="Rechercher"
+                                   aria-label="Rechercher">
+                        </li>
+                        <li class="nav-item">
+                            <button id="searchButton" class="btn btn-outline-success" type="button">Rechercher</button>
+                        </li>
+    
+                    </ul>
+                    <div id="searchResults"></div>
+                    
+                    
+                </div>
+            </nav>
+            
+            <div class="carousel-inner">
+                <!-- Carrousel avec les images -->
+                <div>
+                    <div class="carousel-item active">
+                        <img src="images/dune2.png" class="d-block w-100" alt="Dune Partie 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="images/oppenheimer.png" class="d-block w-100" alt="Oppenheimer">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="images/beekeeper.png" class="d-block w-100" alt="Beekeeper">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="images/halo.png" class="d-block w-100" alt="Halo">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="images/shogun.png" class="d-block w-100" alt="Shogun">
+                    </div>
+                </div>
+
+                <!-- Ajout des chiffres pour naviguer entre les images -->
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="0" class="active">
+                    </button>
+                    <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="1">
+                    </button>
+                    <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="2">
+                    </button>
+                    <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="3">
+                    </button>
+                    <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="4">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+
+    <main>
+        <div id="searchContainer" class="container mt-5">
+            <h2 class="mb-4 text-black">Films Populaires</h2>
+            <div id="filmsCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" id="filmsContainer">
+                    <!-- Les éléments de films seront ajoutés ici -->
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#filmsCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Précédent</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#filmsCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Suivant</span>
+                </button>
+            </div>
+
+            <h2 class="mt-5 mb-4 text-black">Séries Populaires</h2>
+            <div id="seriesCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" id="seriesContainer">
+                    <!-- Les éléments de séries seront ajoutés ici -->
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#seriesCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Précédent</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#seriesCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Suivant</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-home row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top bg-dark text-light text-center img=">
+        <div class="col mb-3"></div>
+        <div class="col mb-3">
+            <a href="/" class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+                <img src="images/Cinetech.svg" class="img-fluid w-50" alt="">
+            </a>
+        </div>
+      
+        <div class="col mb-3">
+            
+        </div>
+      
+        <div class="col mb-3">
+            <h5>Section</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0">Accueil</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0">Films</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0">Série</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0">Favoris</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0">Connnexion</a></li>
+            </ul>
+        </div>
+        <div class="col mb-3"></div>
+
+        <span class="mx-auto border-top pb-3 mb-3">
+            <p class="text-center p-4 pb-0">© 2024 Cinetech, Inc</p>
+        </span>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/jscript/script.js"></script>
+    <script src="/jscript/series.js"></script>
+    <script src="/jscript/films.js"></script>
+    
+</body>

@@ -1,71 +1,272 @@
-// Configuration de l'API TMDb
-const apiKey = '8c4b867188ee47a1d4e40854b27391ec';
+// Fonction pour ajouter une série aux favoris
+function addToFavorites(serieId, serieTitle, seriePoster, ) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    favorites.push({ id: serieId, title: serieTitle, poster: seriePoster });
+    localStorage.setItem('favorites', JSON.stringify(favorites));
 
-// Fonction asynchrone pour récupérer et afficher les séries populaires
-async function getSeries() {
-    const apiUrl = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&language=fr&page=1&sort_by=popularity.desc`;
+    // Affichage de la modal avec le message
+    const successMessage = "Ajouts aux favoris réussi !";
+    displaySuccessModal(successMessage);
+}
 
+// Fonction pour afficher une modal de succès avec un message
+function displaySuccessModal(message) {
+    const successModalBody = document.getElementById('success-modal-body');
+    successModalBody.textContent = message;
+
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    successModal.show();
+}
+
+
+// Fonction pour afficher les favoris dans la modale avec des boutons de suppression
+function displayFavoritesModal() {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const favoritesModalBody = document.getElementById('favorites-modal-body');
+    if (favorites.length > 0) {
+        // Créer le contenu HTML pour chaque série favorite avec un bouton de suppression
+        const favoritesHTML = favorites.map(serie => `
+            <div class="favorite-item d-flex justify-content-between align-items-center">
+                <p class="m-0">${serie.title}</p>
+                <button class="btn btn-danger btn-sm" onclick="removeFromFavorites(${serie.id})">
+                <i class="fas fa-trash-alt mr-"></i> </button>
+            </div>
+        `).join('');
+        favoritesModalBody.innerHTML = favoritesHTML;
+    } else {
+        favoritesModalBody.innerHTML = '<p>Aucune série favorite.</p>';
+    }
+    
+    // Afficher la modal
+    const favoritesModal = new bootstrap.Modal(document.getElementById('favoritesModal'));
+    favoritesModal.show();
+}
+
+// Fonction pour supprimer une série des favoris
+function removeFromFavorites(serieId) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    // Filtrer les favoris pour obtenir une nouvelle liste sans la série à supprimer
+    favorites = favorites.filter(serie => serie.id !== serieId);
+    // Mettre à jour les favoris dans le stockage local
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    // Réafficher la liste des favoris mise à jour dans la modale
+    displayFavoritesModal();
+}
+
+
+
+async function getSeries(page = 1) {
     try {
-        const response = await fetch(apiUrl); // Attente de la réponse du fetch
-        const data = await response.json();  // Attente de la conversion en JSON
+        const apiKey = '8c4b867188ee47a1d4e40854b27391ec';
+        const apiUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=fr&page=${page}`;
 
-        const seriesContainer = document.getElementById('moviesContainer');
-        seriesContainer.innerHTML = ''; // Nettoyage du conteneur pour éviter les doublons
+        const response = await fetch(apiUrl);
+        const data = await response.json();
 
-        // Ajout des séries dans le conteneur
-        data.results.forEach((serie) => {
+        const seriesContainer = document.getElementById('seriesContainer');
+        const searchContainer = document.getElementById('searchContainer');
+        seriesContainer.innerHTML = ''; // Efface le contenu précédent
+        
+        data.results.forEach(async serie => {
             const card = document.createElement('div');
-            card.classList.add('col-md-4', 'mb-4');
-
+            card.classList.add('col-md-3', 'mb-4');
             card.innerHTML = `
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top" alt="${serie.name}">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <h5 class="card-title">${serie.name}</h5>
-                            <p class="card-text">${serie.overview}</p>
+                    <div class="card-body">
+                        <div class="card-buttons">
+                            <a href="lien_de_votre_page" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
+                            <button class="btn btn-danger btn-favorite font-monospace" onclick="addToFavorites(${serie.id}, '${serie.name}', 'https://image.tmdb.org/t/p/w500${serie.poster_path}')">
+                            <i class="fas fa-heart"></i> Favoris </button>
                         </div>
-                        <a href="../html/details.html?serie_id=${serie.id}" class="btn btn-secondary mt-auto" onclick="showDetails(${serie.id})">Détails</a>
+                        <!-- Conteneur pour les commentaires -->
+                        <div class="comments-container"></div>
                     </div>
                 </div>
             `;
+            // Ajout de la card au container principal
             seriesContainer.appendChild(card);
+
+            // Événement de survol pour afficher les commentaires
+            card.addEventListener('mouseenter', async () => {
+                // Récupération et affichage des commentaires
+                const reviewsUrl = `https://api.themoviedb.org/3/tv/${serie.id}/reviews?language=en-FR&page=1`;
+                console.log(serie.id);
+                const options = {
+                    method: 'GET',
+                    headers: {
+                      accept: 'application/json',
+                      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiZjdlOTkyNzRlNmQxZmYwZGRmOGZkYjFlNmI5YThlNyIsInN1YiI6IjY2Mjc2MmViN2E5N2FiMDE3ZDkwNWUwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.WJsGK1qCQ4bw8NgCUU2_PH5e6vapJxd4NeYZX3JbugU'
+                    }
+                };
+                const reviewsResponse = await fetch(reviewsUrl, options);
+                const reviewsData = await reviewsResponse.json();        
+                const commentsContainer = card.querySelector('.comments-container');
+                commentsContainer.innerHTML = ''; // Efface les commentaires précédents
+        
+                reviewsData.results.forEach(review => {
+                    console.log(review);
+                    const comment = document.createElement('div');
+                    comment.classList.add('comment');
+                    comment.innerHTML = `
+                        <p><strong>${review.author}</strong>: ${review.content}</p>
+                    `;
+                    commentsContainer.appendChild(comment);
+                });
+        
+                // Affiche les commentaires
+                commentsContainer.style.display = 'block';
+            });
+
+            // Événement pour masquer les commentaires lorsque l'utilisateur ne survole plus la card
+            card.addEventListener('mouseleave', () => {
+                const commentsContainer = card.querySelector('.comments-container');
+                commentsContainer.style.display = 'none';
+            });
+        });
+        // Fonction de recherche par genre
+        document.getElementById('searchButton').addEventListener('click', async () => {
+            const searchTerm = document.getElementById('searchInput').value;
+            let searchUrl;
+    
+            // Vérifie si le terme de recherche est un genre
+            const genreId = getGenreId(searchTerm);
+            
+            if (genreId) {
+                // Si c'est un genre, recherche par genre
+                searchUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=fr&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${genreId}`;
+            } else {
+                // Sinon, recherche normale
+                searchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&language=fr&query=${searchTerm}`;
+            }
+    
+            try {
+                const response = await fetch(searchUrl);
+                const searchData = await response.json();
+    
+                // Efface le contenu précédent avant d'afficher les nouveaux résultats
+                filmsContainer.innerHTML = '';
+                searchContainer.innerHTML = '';
+                searchContainer.classList.add('row', 'row-cols-1', 'row-cols-md-4', 'mx-auto');
+    
+                // Affiche les résultats de la recherche
+                searchData.results.forEach(result => {
+                    const card = document.createElement('div');
+                    card.classList.add('col-md-3', 'mb-4');
+                    card.innerHTML = `
+                        <div class="card h-100">
+                            <img src="https://image.tmdb.org/t/p/w500${result.poster_path}" class="card-img-top" alt="${result.title}">
+                            <div class="card-body">
+                                <div class="card-buttons">
+                                    <a href="../html/details.html?id=${result.id}" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
+                                    <button class="btn btn-danger btn-favorite font-monospace" onclick="addToFavorites(${result.id}, '${result.title}', 'https://image.tmdb.org/t/p/w500${result.poster_path}')"> <i class="fas fa-heart"></i>Favoris</button>
+                                </div>
+                                <!-- Conteneur pour les commentaires -->
+                                <div class="comments-container"></div>
+                            </div>
+                        </div>
+                    `;
+    
+                    // Ajout de la card au container principal
+                    filmsContainer.appendChild(card);
+                    searchContainer.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Erreur lors de la recherche de films :', error);
+            }
+        });
+    
+    // Fonction pour obtenir l'ID du genre à partir du nom du genre
+    function getGenreId(genreName) {
+        // Créez une correspondance de noms de genre avec les ID de genre
+        const genreMap = {
+            "action": 28,
+            "aventure": 12,
+            "animation": 16,
+            "drame": 18,
+            "science-fiction": 878,
+            "thriller": 53,
+            "horreur": 27,
+            "guerre" : 10725,
+            "documentaire" : 99,
+            "musique": 10402
+        };
+    
+        // Convertit le nom du genre en minuscules pour correspondre
+        const lowercaseGenreName = genreName.toLowerCase();
+    
+        // Vérifie si le nom du genre correspond à un ID de genre
+        return genreMap[lowercaseGenreName] || null;
+    }
+
+        // Ajout de la fonction de recherche
+        document.getElementById('searchButton').addEventListener('click', async () => {
+            const searchTerm = document.getElementById('searchInput').value;
+            const searchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&language=fr&query=${searchTerm}`;
+    
+            try {
+                const response = await fetch(searchUrl);
+                const searchData = await response.json();
+    
+                // Efface le contenu précédent avant d'afficher les nouveaux résultats
+                seriesContainer.innerHTML = '';
+                searchContainer.innerHTML = '';
+
+    
+                // Affiche les résultats de la recherche sur la page série
+                searchData.results.forEach(result => {
+                    const card = document.createElement('div');
+                    card.classList.add('col-md-3', 'mb-4');
+                    card.innerHTML = `
+                        <div class="card h-100">
+                            <img src="https://image.tmdb.org/t/p/w500${result.poster_path}" class="card-img-top" alt="${result.title}">
+                            <div class="card-body">
+                                <div class="card-buttons">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <a href="../html/details.html?id=${result.id}" class="btn btn-primary btn-details font-monospace"><i class="fas fa-info-circle"></i> Détails</a>
+                                    <button class="btn btn-danger btn-favorite font-monospace" onclick="addToFavorites(${result.id}, '${result.title}', 'https://image.tmdb.org/t/p/w500${result.poster_path}')">
+                                    <i class="fas fa-heart"></i> Favoris
+                                </button>
+                                </div>
+                                <!-- Conteneur pour les commentaires -->
+                                <div class="comments-container"></div>
+                            </div>
+                        </div>
+                    `;
+    
+                    // Ajout de la card au container principal
+                    seriesContainer.appendChild(card);
+                    searchContainer.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Erreur lors de la recherche des series :', error);
+            }
         });
 
+
+        // Ajouter un événement au bouton "Favoris"
+        document.getElementById('favoriteButton').addEventListener('click', displayFavoritesModal);
+        
+        // Pagination
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+        const totalPages = 10; // Nombre total de pages de pagination
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement('li');
+            li.classList.add('page-item');
+            const link = document.createElement('a');
+            link.classList.add('page-link');
+            link.href = '#';
+            link.textContent = i;
+            link.addEventListener('click', () => {
+                getSeries(i); // Appel de la fonction avec le numéro de page correspondant
+            });
+            li.appendChild(link);
+            pagination.appendChild(li);
+        }
     } catch (error) {
         console.error('Erreur lors de la récupération des séries :', error);
     }
 }
-
-// Fonction pour rediriger vers la page de détails avec l'ID de la série
-function showDetails(id) {
-    localStorage.setItem('serieId', id); // Stocker l'ID de la série dans le localStorage
-    window.location.href = 'details.html'; // Rediriger vers la page de détails
-}
-
-// Appeler la fonction pour récupérer les séries au chargement de la page
-getSeries(); // Récupération des séries au chargement de la page
-
-// Fonction asynchrone pour afficher les détails d'une série sur la page "details.html"
-async function displaySerieDetails() {
-    const serieId = localStorage.getItem('serieId'); // Récupérer l'ID de la série du localStorage
-    const apiUrl = `https://api.themoviedb.org/3/tv/${serieId}?api_key=${apiKey}&language=fr`;
-
-    try {
-        const response = await fetch(apiUrl); // Attente de la réponse du fetch
-        const data = await response.json();  // Attente de la conversion en JSON
-
-        const detailsElement = document.getElementById('details'); // Sélection de l'élément pour afficher les détails
-
-        detailsElement.innerHTML = `
-            <h2>${data.name}</h2>
-            <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" alt="${data.name}">
-            <p>${data.overview}</p>
-            <p>Nombre de saisons : ${data.number_of_seasons}</p>
-            <p>Nombre d'épisodes : ${data.number_of_episodes}</p>
-        `;
-
-    } catch (error) {
-        console.error('Erreur lors de la récupération des détails de la série :', error);
-    }
-}
+// Appel de la fonction pour récupérer les séries
+getSeries();
