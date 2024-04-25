@@ -14,75 +14,49 @@ async function fetchApi(url) {
         return null;
     }
 }
-// Fonction pour obtenir les commentaires à partir de l'API TMDB
-async function getComments(endpoint, itemId) {
-    const commentsUrl = `https://api.themoviedb.org/3/${endpoint}/${itemId}/reviews?api_key=${apiKey}`;
-    const commentsData = await fetchApi(commentsUrl);
 
-    if (!commentsData || !commentsData.results || commentsData.results.length === 0) {
-        return 'Aucun commentaire disponible.';
-    }
+// Fonction pour obtenir les détails d'un film ou d'une série
+async function getDetails(endpoint, itemId, isSeries) {
+    const [data, credits] = await Promise.all([
+        fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}?api_key=${apiKey}&language=fr`),
+        fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}/credits?api_key=${apiKey}&language=fr`)
+    ]);
 
-    // Afficher les commentaires
-    return commentsData.results
-        .map((comment) => {
-            const author = comment.author || 'Anonyme';
-            const content = comment.content || 'Pas de contenu.';
-            return `<div class="comment">
-                        <strong>Par: ${author}</strong>
-                        <p>${content}</p>
-                    </div>`;
-        })
-        .join('');
-}
-
-// Fonction générique pour extraire et afficher les détails d'un film ou d'une série
-async function getDetails(endpoint, itemId, isSeries = true) {
-    const apiUrl = `https://api.themoviedb.org/3/${endpoint}/${itemId}?api_key=${apiKey}&language=fr`;
-    const creditsUrl = `https://api.themoviedb.org/3/${endpoint}/${itemId}/credits?api_key=${apiKey}&language=fr`;
-
-    const data = await fetchApi(apiUrl);
-    const creditsData = await fetchApi(creditsUrl);
-
-    if (!data || !creditsData) {
+    if (!data || !credits) {
         document.getElementById("details").innerText = "Les détails ne peuvent pas être affichés.";
         return;
     }
 
-    // Détails génériques
     const title = isSeries ? data.name : data.title;
-    const genres = data.genres?.map(genre => genre.name).join(', ') || 'Inconnu';
+    const genres = data.genres?.map(g => g.name).join(', ') || 'Inconnu';
     const nationality = isSeries ? data.origin_country?.join(', ') : data.production_countries?.map(p => p.name).join(', ');
     const imageSrc = data.poster_path ? `${baseImageUrl}${data.poster_path}` : '';
+    const director = credits.crew.find(c => c.job === 'Director')?.name || 'Inconnu';
+    const actors = credits.cast.slice(0, 5).map(a => a.name).join(', ') || 'Inconnu';
 
-    // Détails spécifiques aux séries et films
-    const details = {
-        seasons: data.number_of_seasons || 'Inconnu',
-        episodes: data.number_of_episodes || 'Inconnu',
-        runtime: data.runtime ? `${data.runtime} minutes` : 'Inconnu'
-    };
+    const specificDetails = isSeries
+        ? `<p>Nombre de saisons : ${data.number_of_seasons || 'Inconnu'}</p>
+           <p>Nombre d'épisodes : ${data.number_of_episodes || 'Inconnu'}</p>`
+        : `<p>Durée : ${data.runtime ? `${data.runtime} minutes` : 'Inconnu'}</p>`;
 
-    // Extraction des crédits
-    const director = creditsData.crew.find(member => member.job === 'Director');
-    const directorName = director ? director.name : 'Inconnu';
-    const actors = creditsData.cast.slice(0, 5).map(actor => actor.name).join(', ') || 'Inconnu';
-
-    // Créer le HTML pour afficher les détails
     document.getElementById("details").innerHTML = `
         <h2>${title}</h2>
         <img src="${imageSrc}" alt="${title}">
         <p>${data.overview || 'Aucune description disponible'}</p>
-        ${isSeries ? `<p>Nombre de saisons : ${details.seasons}</p>` : ''}
-        ${isSeries ? `<p>Nombre d'épisodes : ${details.episodes}</p>` : ''}
-        ${!isSeries ? `<p>Durée : ${details.runtime}</p>` : ''}
+        ${specificDetails}
         <p>Genre : ${genres}</p>
-        <p>Réalisateur : ${directorName}</p>
+        <p>Réalisateur : ${director}</p>
         <p>Acteurs : ${actors}</p>
         <p>Nationalité : ${nationality}</p>
     `;
-   // Obtenir et afficher les commentaires
-   const commentsHtml = await getComments(endpoint, itemId);
-   document.getElementById("comments").innerHTML = commentsHtml;
+
+    // Obtenir les commentaires
+    const comments = await fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}/reviews?api_key=${apiKey}`);
+    const commentsHtml = comments?.results?.length > 0 
+        ? comments.results.map(c => `<div class="comment"><strong>Par: ${c.author || 'Anonyme'}</strong><p>${c.content || 'Pas de contenu.'}</p></div>`).join('') 
+        : 'Aucun commentaire disponible.';
+    
+    document.getElementById("comments").innerHTML = commentsHtml;
 
     // Récupérer une recommandation
     if (data.genres && data.genres.length > 0) {
@@ -97,16 +71,14 @@ async function getDetails(endpoint, itemId, isSeries = true) {
 // Fonction pour obtenir une recommandation basée sur le genre
 async function getRecommended(genreId, isSeries) {
     const endpoint = isSeries ? 'discover/tv' : 'discover/movie';
-    const discoverUrl = `https://api.themoviedb.org/3/${endpoint}?api_key=${apiKey}&with_genres=${genreId}`;
-    const data = await fetchApi(discoverUrl);
+    const data = await fetchApi(`https://api.themoviedb.org/3/${endpoint}?api_key=${apiKey}&with_genres=${genreId}`);
 
-    if (data && data.results && data.results.length > 0) {
-        const randomIndex = Math.floor(Math.random() * data.results.length);
-        const recommended = data.results[randomIndex];
-        return isSeries ? recommended.name : recommended.title;
-    } else {
+    if (!data || !data.results?.length) {
         return 'Aucune recommandation';
     }
+
+    const randomIndex = Math.floor(Math.random() * data.results.length);
+    return isSeries ? data.results[randomIndex].name : data.results[randomIndex].title;
 }
 
 // Récupérer et afficher les détails de la série et du film
@@ -119,4 +91,3 @@ const movieId = urlParams.get("film_id");
 if (movieId) {
     getDetails('movie', movieId, false);
 }
-
