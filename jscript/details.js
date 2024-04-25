@@ -10,30 +10,29 @@ async function fetchApi(url) {
         if (!response.ok) throw new Error('Erreur lors de la récupération des données.');
         return await response.json();
     } catch (error) {
-        console.error('Erreur lors de la récupération des données de l\'API :', error);
+        console.error("Erreur lors de la récupération des données de l'API :", error);
         return null;
     }
 }
 
-// Fonction pour obtenir les détails d'un film ou d'une série
+// Fonction pour obtenir des détails d'un film ou d'une série
 async function getDetails(endpoint, itemId, isSeries) {
-    const [data, credits] = await Promise.all([
+    const [data, credits, commentsData] = await Promise.all([
         fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}?api_key=${apiKey}&language=fr`),
-        fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}/credits?api_key=${apiKey}&language=fr`)
+        fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}/credits?api_key=${apiKey}&language=fr`),
+        fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}/reviews?api_key=${apiKey}`)
     ]);
 
-    if (!data || !credits) {
+    if (!data) {
         document.getElementById("details").innerText = "Les détails ne peuvent pas être affichés.";
         return;
     }
 
     const title = isSeries ? data.name : data.title;
     const genres = data.genres?.map(g => g.name).join(', ') || 'Inconnu';
-    const nationality = isSeries ? data.origin_country?.join(', ') : data.production_countries?.map(p => p.name).join(', ');
+    const nationality = isSeries ? data.origin_country?.join(', ') : data.production_countries?.map(p => p.name).join(', ') || 'Inconnu';
     const imageSrc = data.poster_path ? `${baseImageUrl}${data.poster_path}` : '';
-    const director = credits.crew.find(c => c.job === 'Director')?.name || 'Inconnu';
-    const actors = credits.cast.slice(0, 5).map(a => a.name).join(', ') || 'Inconnu';
-
+    
     const specificDetails = isSeries
         ? `<p>Nombre de saisons : ${data.number_of_seasons || 'Inconnu'}</p>
            <p>Nombre d'épisodes : ${data.number_of_episodes || 'Inconnu'}</p>`
@@ -45,30 +44,37 @@ async function getDetails(endpoint, itemId, isSeries) {
         <p>${data.overview || 'Aucune description disponible'}</p>
         ${specificDetails}
         <p>Genre : ${genres}</p>
-        <p>Réalisateur : ${director}</p>
-        <p>Acteurs : ${actors}</p>
+        <p>Réalisateur : ${credits.crew.find(c => c.job === 'Director')?.name || 'Inconnu'}</p>
+        <p>Acteurs : ${credits.cast.slice(0, 5).map(a => a.name).join(', ') || 'Inconnu'}</p>
         <p>Nationalité : ${nationality}</p>
     `;
 
-    // Obtenir les commentaires
-    const comments = await fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}/reviews?api_key=${apiKey}`);
-    const commentsHtml = comments?.results?.length > 0 
-        ? comments.results.map(c => `<div class="comment"><strong>Par: ${c.author || 'Anonyme'}</strong><p>${c.content || 'Pas de contenu.'}</p></div>`).join('') 
+    // Afficher les commentaires avec une option de réponse
+    const storedReplies = getStoredReplies(itemId);
+    const commentsHtml = commentsData?.results?.length > 0 
+        ? commentsData.results.map((c, i) => `
+            <div class="comment">
+                <strong>Par: ${c.author || 'Anonyme'}</strong>
+                <p>${c.content || 'Pas de contenu.'}</p>
+                <button onclick="replyToComment(${i})">Répondre</button>
+                <div id="reply-section-${i}" class="reply-section" style="display: none;">
+                    <textarea id="reply-input-${i}" placeholder="Votre réponse">${storedReplies[i] || ''}</textarea>
+                    <button onclick="submitReply(${i}, ${itemId})">Soumettre</button>
+                </div>
+            </div>
+        `).join('')
         : 'Aucun commentaire disponible.';
-    
+
     document.getElementById("comments").innerHTML = commentsHtml;
 
     // Récupérer une recommandation
-    if (data.genres && data.genres.length > 0) {
-        const genreId = data.genres[0].id;
-        const recommended = await getRecommended(genreId, isSeries);
-        document.getElementById("recommended").innerHTML = `
-            <p>Si vous avez aimé ${title}, vous aimerez : ${recommended}</p>
-        `;
-    }
+    const recommended = await getRecommended(data.genres?.[0]?.id, isSeries);
+    document.getElementById("recommended").innerHTML = `
+        <p>Si vous avez aimé ${title}, vous aimerez : ${recommended}</p>
+    `;
 }
 
-// Fonction pour obtenir une recommandation basée sur le genre
+// Fonction pour obtenir des recommandations basées sur le genre
 async function getRecommended(genreId, isSeries) {
     const endpoint = isSeries ? 'discover/tv' : 'discover/movie';
     const data = await fetchApi(`https://api.themoviedb.org/3/${endpoint}?api_key=${apiKey}&with_genres=${genreId}`);
@@ -79,6 +85,32 @@ async function getRecommended(genreId, isSeries) {
 
     const randomIndex = Math.floor(Math.random() * data.results.length);
     return isSeries ? data.results[randomIndex].name : data.results[randomIndex].title;
+}
+
+// Fonction pour gérer la réponse aux commentaires
+function replyToComment(index) {
+    const section = document.getElementById(`reply-section-${index}`);
+    section.style.display = section.style.display === 'none' ? 'block' : 'none';
+}
+
+function submitReply(index, itemId) {
+    const replyText = document.getElementById(`reply-input-${index}`).value;
+    console.log('Réponse soumise :', replyText);
+    storeReply(itemId, index, replyText);
+}
+
+// Fonction pour stocker des réponses localement
+function storeReply(itemId, commentIndex, replyText) {
+    const key = `replies-${itemId}`;
+    let replies = JSON.parse(localStorage.getItem(key)) || {};
+    replies[commentIndex] = replyText;
+    localStorage.setItem(key, JSON.stringify(replies));
+}
+
+// Fonction pour récupérer des réponses stockées
+function getStoredReplies(itemId) {
+    const key = `replies-${itemId}`;
+    return JSON.parse(localStorage.getItem(key)) || {};
 }
 
 // Récupérer et afficher les détails de la série et du film
