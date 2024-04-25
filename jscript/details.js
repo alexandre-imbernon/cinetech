@@ -1,9 +1,9 @@
-// Clé API et URL de base pour les images
+// Configuration API
 const apiKey = '8c4b867188ee47a1d4e40854b27391ec';
 const baseImageUrl = 'https://image.tmdb.org/t/p/w500';
 const urlParams = new URLSearchParams(window.location.search);
 
-// Fonction générique pour récupérer les données d'une API
+// Fonction générique pour récupérer des données d'une API
 async function fetchApi(url) {
     try {
         const response = await fetch(url);
@@ -50,24 +50,9 @@ async function getDetails(endpoint, itemId, isSeries) {
     `;
 
     // Afficher les commentaires avec une option de réponse
-    const storedReplies = getStoredReplies(itemId);
-    const commentsHtml = commentsData?.results?.length > 0 
-        ? commentsData.results.map((c, i) => `
-            <div class="comment">
-                <strong>Par: ${c.author || 'Anonyme'}</strong>
-                <p>${c.content || 'Pas de contenu.'}</p>
-                <button onclick="replyToComment(${i})">Répondre</button>
-                <div id="reply-section-${i}" class="reply-section" style="display: none;">
-                    <textarea id="reply-input-${i}" placeholder="Votre réponse">${storedReplies[i] || ''}</textarea>
-                    <button onclick="submitReply(${i}, ${itemId})">Soumettre</button>
-                </div>
-            </div>
-        `).join('')
-        : 'Aucun commentaire disponible.';
-
-    document.getElementById("comments").innerHTML = commentsHtml;
-
-    // Récupérer une recommandation
+    displayComments(commentsData, itemId);
+    
+    // Afficher les recommandations basées sur le genre
     const recommended = await getRecommended(data.genres?.[0]?.id, isSeries);
     document.getElementById("recommended").innerHTML = `
         <p>Si vous avez aimé ${title}, vous aimerez : ${recommended}</p>
@@ -79,31 +64,30 @@ async function getRecommended(genreId, isSeries) {
     const endpoint = isSeries ? 'discover/tv' : 'discover/movie';
     const data = await fetchApi(`https://api.themoviedb.org/3/${endpoint}?api_key=${apiKey}&with_genres=${genreId}`);
 
-    if (!data || !data.results?.length) {
-        return 'Aucune recommandation';
+    if (!data || data.results?.length === 0) {
+        return "Aucune recommandation";
     }
 
     const randomIndex = Math.floor(Math.random() * data.results.length);
     return isSeries ? data.results[randomIndex].name : data.results[randomIndex].title;
 }
 
-// Fonction pour gérer la réponse aux commentaires
-function replyToComment(index) {
-    const section = document.getElementById(`reply-section-${index}`);
-    section.style.display = section.style.display === 'none' ? 'block' : 'none';
-}
-
-function submitReply(index, itemId) {
-    const replyText = document.getElementById(`reply-input-${index}`).value;
-    console.log('Réponse soumise :', replyText);
-    storeReply(itemId, index, replyText);
+function getStoredReplies(itemId) {
+    const key = `replies-${itemId}`;
+    return JSON.parse(localStorage.getItem(key)) || {};
 }
 
 // Fonction pour stocker des réponses localement
 function storeReply(itemId, commentIndex, replyText) {
     const key = `replies-${itemId}`;
     let replies = JSON.parse(localStorage.getItem(key)) || {};
-    replies[commentIndex] = replyText;
+
+    if (replies[commentIndex]) {
+        replies[commentIndex] += `\n\n${replyText}`; // Ajouter à la suite si déjà existant
+    } else {
+        replies[commentIndex] = replyText; // Nouvelle réponse
+    }
+
     localStorage.setItem(key, JSON.stringify(replies));
 }
 
@@ -113,7 +97,67 @@ function getStoredReplies(itemId) {
     return JSON.parse(localStorage.getItem(key)) || {};
 }
 
-// Récupérer et afficher les détails de la série et du film
+// Fonction pour afficher les commentaires avec les réponses stockées
+function displayComments(commentsData, itemId) {
+    const storedReplies = getStoredReplies(itemId);
+    const commentsHtml = commentsData?.results?.length > 0
+        ? commentsData.results.map((c, i) => `
+            <div class="comment">
+                <strong>Par: ${c.author || 'Anonyme'}</strong>
+                <p>${c.content || 'Pas de contenu.'}</p>
+                <div class="replies" id="replies-${i}">
+                    ${storedReplies[i] ? `<strong>Réponses :</strong><p>${storedReplies[i]}</p>` : ""}
+                </div>
+                <button onclick="replyToComment(${i})">Répondre</button>
+                <div id="reply-section-${i}" class="reply-section" style="display: none;">
+                    <textarea id="reply-input-${i}" placeholder="Votre réponse"></textarea>
+                    <button onclick="submitReply(${i}, ${itemId})">Soumettre</button>
+                </div>
+            </div>
+        `).join("")
+        : "Aucun commentaire disponible.";
+
+    document.getElementById("comments").innerHTML = commentsHtml;
+}
+
+// Fonction pour gérer la réponse aux commentaires
+function submitReply(index, itemId) {
+    const replyText = document.getElementById(`reply-input-${index}`).value;
+
+    if (replyText.trim() !== "") {
+        storeReply(itemId, index, replyText); // Stocker la réponse
+
+        console.log("Réponse soumise :", replyText);
+
+        // Afficher la réponse dans l'interface utilisateur
+        const commentDiv = document.querySelectorAll(".comment")[index];
+        const replyContainer = document.createElement("div");
+        replyContainer.className = "reply";
+        replyContainer.innerHTML = `<p>${replyText}</p>`;
+
+        commentDiv.appendChild(replyContainer);
+
+        // Garder la section de réponse ouverte après soumission
+        const replySection = document.getElementById(`reply-section-${index}`);
+        if (replySection) {
+            replySection.style.display = "block"; // Garder ouvert
+        }
+    } else {
+        console.log("Aucune réponse fournie.");
+    }
+}
+
+// Fonction pour afficher ou masquer la zone de réponse
+function replyToComment(index) {
+    const replySection = document.getElementById(`reply-section-${index}`);
+    if (replySection.style.display === "none") {
+        replySection.style.display = "block"; // Afficher la zone de réponse
+    } else {
+        replySection.style.display = "none"; // Masquer
+    }
+}
+
+// Récupérer les identifiants de série et de film depuis l'URL
 const serieId = urlParams.get("serie_id");
 if (serieId) {
     getDetails('tv', serieId, true);
