@@ -32,22 +32,26 @@ async function getFilms(page = 1) {
             // Événement de survol pour afficher les commentaires
             card.addEventListener('mouseenter', async () => {
                 // Récupération et affichage des commentaires
-                const reviewsUrl = `https://api.themoviedb.org/3/movie/${film.id}/reviews?api_key=${apiKey}&language=fr&page=1`;
+                const reviewsUrl = `https://api.themoviedb.org/3/movie/${film.id}/reviews?api_key=${apiKey}&language=en&page=1`;
                 const reviewsResponse = await fetch(reviewsUrl);
                 const reviewsData = await reviewsResponse.json();
-        
+                console.log (film.id);
                 const commentsContainer = card.querySelector('.comments-container');
                 commentsContainer.innerHTML = ''; // Efface les commentaires précédents
-        
+                
+                // text-truncate pour reduire la taille des commentaires
                 reviewsData.results.forEach(review => {
                     const comment = document.createElement('div');
                     comment.classList.add('comment');
                     comment.innerHTML = `
-                        <p><strong>${review.author}</strong>: ${review.content}</p>
+                        <p class = "text-truncate"><strong>${review.author}</strong>: ${review.content}</p>
                     `;
                     commentsContainer.appendChild(comment);
                 });
         
+
+
+                
                 // Affiche les commentaires
                 commentsContainer.style.display = 'block';
             });
@@ -156,7 +160,7 @@ function getGenreId(genreName) {
 }
 
 
-    
+
 
 // Appel de la fonction pour récupérer les films au chargement de la page
 getFilms();
