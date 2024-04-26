@@ -208,7 +208,6 @@ async function getSeries(page = 1) {
         return genreMap[lowercaseGenreName] || null;
     }
 
-
         // Ajouter un événement au bouton "Favoris"
         document.getElementById('favoriteButton').addEventListener('click', displayFavoritesModal);
         
