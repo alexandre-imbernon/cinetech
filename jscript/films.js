@@ -1,3 +1,6 @@
+const backdrops = document.querySelectorAll('.modal-backdrop');
+backdrops.forEach(backdrop => backdrop.remove()); // Retirer les overlays
+
 // Fonction pour ajouter une série aux favoris
 function addToFavorites(serieId, serieTitle, seriePoster, ) {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -23,35 +26,48 @@ function displaySuccessModal(message) {
 function displayFavoritesModal() {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const favoritesModalBody = document.getElementById('favorites-modal-body');
+
+    // Réinitialiser le contenu
+    favoritesModalBody.innerHTML = '';
+
     if (favorites.length > 0) {
-        // Créer le contenu HTML pour chaque série favorite avec un bouton de suppression
         const favoritesHTML = favorites.map(serie => `
             <div class="favorite-item d-flex justify-content-between align-items-center">
-                <p class="m-0">${serie.name || film.title}</p>
+                <p class="m-0">${serie.title}</p>
                 <button class="btn btn-danger btn-sm" onclick="removeFromFavorites(${serie.id})">
-                <i class="fas fa-trash-alt mr-"></i> </button>
+                <i class="fas fa-trash-alt mr-"></i></button>
             </div>
         `).join('');
         favoritesModalBody.innerHTML = favoritesHTML;
     } else {
         favoritesModalBody.innerHTML = '<p>Aucune série favorite.</p>';
     }
-    
-    // Afficher la modal
+
+    // Réinitialiser les styles de la modale
     const favoritesModal = new bootstrap.Modal(document.getElementById('favoritesModal'));
+    if (favoritesModal._isShown) {
+        favoritesModal.hide(); // Fermer la modale avant de l'ouvrir de nouveau
+    }
+
     favoritesModal.show();
 }
 
-// Fonction pour supprimer une série des favoris
+
 function removeFromFavorites(serieId) {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    // Filtrer les favoris pour obtenir une nouvelle liste sans la série à supprimer
     favorites = favorites.filter(serie => serie.id !== serieId);
-    // Mettre à jour les favoris dans le stockage local
     localStorage.setItem('favorites', JSON.stringify(favorites));
-    // Réafficher la liste des favoris mise à jour dans la modale
-    displayFavoritesModal();
+
+    // Fermer la modale pour éviter l'accumulation
+    const favoritesModal = bootstrap.Modal.getInstance(document.getElementById('favoritesModal'));
+    if (favoritesModal) {
+        favoritesModal.hide();
+    }
+
+    // Réafficher la liste des favoris mise à jour
+    displayFavoritesModal(); 
 }
+
 
 
 async function getFilms(page = 1) {

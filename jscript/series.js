@@ -1,3 +1,6 @@
+const backdrops = document.querySelectorAll('.modal-backdrop');
+backdrops.forEach(backdrop => backdrop.remove()); // Retirer les overlays
+
 // Fonction pour ajouter une série aux favoris
 function addToFavorites(serieId, serieTitle, seriePoster, ) {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -45,13 +48,18 @@ function displayFavoritesModal() {
 // Fonction pour supprimer une série des favoris
 function removeFromFavorites(serieId) {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    // Filtrer les favoris pour obtenir une nouvelle liste sans la série à supprimer
     favorites = favorites.filter(serie => serie.id !== serieId);
-    // Mettre à jour les favoris dans le stockage local
     localStorage.setItem('favorites', JSON.stringify(favorites));
-    // Réafficher la liste des favoris mise à jour dans la modale
-    displayFavoritesModal();
+    
+    const favoritesModal = bootstrap.Modal.getInstance(document.getElementById('favoritesModal'));
+    if (favoritesModal) {
+        favoritesModal.hide(); // Assurez-vous que la modale est fermée
+    }
+
+    // Mettre à jour la liste des favoris après la suppression
+    displayFavoritesModal(); // Réafficher les favoris
 }
+
 
 
 
