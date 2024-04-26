@@ -1,17 +1,48 @@
 const backdrops = document.querySelectorAll('.modal-backdrop');
 backdrops.forEach(backdrop => backdrop.remove()); // Retirer les overlays
 
-// Fonction pour ajouter une série aux favoris
-function addToFavorites(serieId, serieTitle, seriePoster, ) {
+// Définition de la fonction isMovieAlreadyInFavorites
+function isMovieAlreadyInFavorites(movieId) {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    
+    // Convertir movieId en nombre entier
+    movieId = parseInt(movieId);
+
+    // Vérifier si l'identifiant du film existe déjà dans les favoris
+    return favorites.some(movie => movie.id === movieId);
+}
+
+// Fonction pour afficher une modal d'erreur avec un message
+function displayErrorModal(message) {
+    const errorModalBody = document.getElementById('error-modal-body');
+    errorModalBody.textContent = message;
+
+    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+    errorModal.show();
+}
+
+// Fonction pour ajouter une série aux favoris
+function addToFavorites(serieId, serieTitle, seriePoster) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+    // Vérifier si l'élément existe déjà dans les favoris
+    const isAlreadyFavorite = favorites.some(serie => serie.id === serieId);
+
+    if (isAlreadyFavorite) {
+        // Afficher la modal d'erreur avec un message approprié
+        const errorMessage = "Ce film ou série est déjà dans les favoris.";
+        displayErrorModal(errorMessage);
+        return;
+    }
+
+    // Ajouter l'élément aux favoris
     favorites.push({ id: serieId, title: serieTitle, poster: seriePoster });
     localStorage.setItem('favorites', JSON.stringify(favorites));
 
-    // Affichage de la modal avec le message
-    const successMessage = "Ajouts aux favoris réussi !";
+    // Afficher la modal avec le message de succès
+    const successMessage = "Ajout aux favoris réussi !";
     displaySuccessModal(successMessage);
 }
-
 // Fonction pour afficher une modal de succès avec un message
 function displaySuccessModal(message) {
     const successModalBody = document.getElementById('success-modal-body');
@@ -59,8 +90,6 @@ function removeFromFavorites(serieId) {
     // Mettre à jour la liste des favoris après la suppression
     displayFavoritesModal(); // Réafficher les favoris
 }
-
-
 
 
 async function getSeries(page = 1) {
