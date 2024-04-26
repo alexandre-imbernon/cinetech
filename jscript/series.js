@@ -1,8 +1,27 @@
 const backdrops = document.querySelectorAll('.modal-backdrop');
 backdrops.forEach(backdrop => backdrop.remove()); // Retirer les overlays
 
-// Fonction pour ajouter une série aux favoris
-function addToFavorites(serieId, serieTitle, seriePoster, ) {
+// Définition de la fonction isMovieAlreadyInFavorites
+function isMovieAlreadyInFavorites(movieId) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    
+    // Convertir movieId en nombre entier
+    movieId = parseInt(movieId);
+
+    // Vérifier si l'identifiant du film existe déjà dans les favoris
+    return favorites.some(movie => movie.id === movieId);
+}
+
+// Définition de la fonction addToFavorites
+function addToFavorites(serieId, serieTitle, seriePoster) {
+    // Vérifier si le film est déjà dans les favoris
+    if (isMovieAlreadyInFavorites(serieId)) {
+        // Afficher un message d'erreur ou effectuer une action appropriée
+        console.log('Ce film ou série est déjà dans les favoris.');
+        return;
+    }
+
+    // Si le film n'est pas déjà dans les favoris, l'ajouter
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     favorites.push({ id: serieId, title: serieTitle, poster: seriePoster });
     localStorage.setItem('favorites', JSON.stringify(favorites));
@@ -59,8 +78,6 @@ function removeFromFavorites(serieId) {
     // Mettre à jour la liste des favoris après la suppression
     displayFavoritesModal(); // Réafficher les favoris
 }
-
-
 
 
 async function getSeries(page = 1) {
