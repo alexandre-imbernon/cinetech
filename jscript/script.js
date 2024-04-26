@@ -69,7 +69,7 @@ function displayCarouselItems(items, containerId) {
 
             // Créer un lien qui dirige vers la page de détails de l'élément
             columnElement.innerHTML = `
-                <a href="/details.html?id=${itemId}" class="card-link">
+                <a href="/html/details.html?${item.media_type}_id=${itemId}" class="card-link">
                     <div class="card mb-3">
                         <img src="https://image.tmdb.org/t/p/w500${posterPath}" class="card-img-top" alt="${title}">
                     </div>

@@ -3,12 +3,12 @@ const apiKey = '8c4b867188ee47a1d4e40854b27391ec';
 const baseImageUrl = 'https://image.tmdb.org/t/p/w500';
 const urlParams = new URLSearchParams(window.location.search);
 // Récupérer les identifiants de série et de film depuis l'URL
-const serieId = urlParams.get("serie_id");
+const serieId = urlParams.get("tv_id");
 if (serieId) {
     getDetails('tv', serieId, true);
 }
 
-const movieId = urlParams.get("film_id");
+const movieId = urlParams.get("movie_id");
 if (movieId) {
     getDetails('movie', movieId, false);
 }
@@ -30,7 +30,7 @@ async function getDetails(endpoint, itemId, isSeries) {
     const [data, credits, commentsData] = await Promise.all([
         fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}?api_key=${apiKey}&language=fr`),
         fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}/credits?api_key=${apiKey}&language=fr`),
-        fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}/reviews?api_key=${apiKey}`)
+        fetchApi(`https://api.themoviedb.org/3/${endpoint}/${itemId}/reviews?api_key=${apiKey}&language=fr&language=en`)
     ]);
 
     if (!data) {

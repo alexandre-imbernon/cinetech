@@ -89,7 +89,7 @@ async function getFilms(page = 1) {
                     <img src="https://image.tmdb.org/t/p/w500${film.poster_path}" class="card-img-top" alt="${film.title}">
                     <div class="card-body">
                         <div class="card-buttons">
-                            <a href="lien_de_votre_page" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
+                            <a href="/html/details.html?movie_id=${film.id}" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
                             <button class="btn btn-danger btn-favorite font-monospace" onclick="addToFavorites(${film.id}, '${film.title}', 'https://image.tmdb.org/t/p/w500${film.poster_path}')">
                             <i class="fas fa-heart"></i> Favoris</div>
                         <!-- Conteneur pour les commentaires -->
@@ -163,7 +163,7 @@ async function getFilms(page = 1) {
                         <img src="https://image.tmdb.org/t/p/w500${result.poster_path}" class="card-img-top" alt="${result.title}">
                         <div class="card-body">
                             <div class="card-buttons">
-                                <a href="lien_de_votre_page" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
+                                <a href="/html/details.html?${result.media_type}_id=${result.id}" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
                                 <button class="btn btn-danger btn-favorite font-monospace" onclick="addToFavorites(${result.id}, '${result.title}', 'https://image.tmdb.org/t/p/w500${result.poster_path}')"> <i class="fas fa-heart"></i>Favoris</button>
                             </div>
                             <!-- Conteneur pour les commentaires -->

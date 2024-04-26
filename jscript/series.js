@@ -83,7 +83,7 @@ async function getSeries(page = 1) {
                     <img src="https://image.tmdb.org/t/p/w500${serie.poster_path}" class="card-img-top" alt="${serie.name}">
                     <div class="card-body">
                         <div class="card-buttons">
-                            <a href="lien_de_votre_page" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
+                            <a href="/html/details.html?tv_id=${serie.id}" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
                             <button class="btn btn-danger btn-favorite font-monospace" onclick="addToFavorites(${serie.id}, '${serie.name}', 'https://image.tmdb.org/t/p/w500${serie.poster_path}')">
                             <i class="fas fa-heart"></i> Favoris </button>
                         </div>
@@ -166,7 +166,7 @@ async function getSeries(page = 1) {
                             <img src="https://image.tmdb.org/t/p/w500${result.poster_path}" class="card-img-top" alt="${result.title}">
                             <div class="card-body">
                                 <div class="card-buttons">
-                                    <a href="../html/details.html?id=${result.id}" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
+                                    <a href="../html/details.html?${result.media_type}_id=${result.id}" class="btn btn-primary btn-details font-monospace"> <i class="fas fa-info-circle"></i>Détails</a>
                                     <button class="btn btn-danger btn-favorite font-monospace" onclick="addToFavorites(${result.id}, '${result.title}', 'https://image.tmdb.org/t/p/w500${result.poster_path}')"> <i class="fas fa-heart"></i>Favoris</button>
                                 </div>
                                 <!-- Conteneur pour les commentaires -->
@@ -231,7 +231,7 @@ async function getSeries(page = 1) {
                             <div class="card-body">
                                 <div class="card-buttons">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <a href="../html/details.html?id=${result.id}" class="btn btn-primary btn-details font-monospace"><i class="fas fa-info-circle"></i> Détails</a>
+                                    <a href="../html/details.html?${result.media_type}_id=${result.id}" class="btn btn-primary btn-details font-monospace"><i class="fas fa-info-circle"></i> Détails</a>
                                     <button class="btn btn-danger btn-favorite font-monospace" onclick="addToFavorites(${result.id}, '${result.title}', 'https://image.tmdb.org/t/p/w500${result.poster_path}')">
                                     <i class="fas fa-heart"></i> Favoris
                                 </button>
