@@ -53,7 +53,6 @@ function displaySuccessModal(message) {
     successModal.show();
 }
 
-
 // Fonction pour afficher les favoris dans la modale avec des boutons de suppression
 function displayFavoritesModal() {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
