@@ -12,22 +12,35 @@ function isMovieAlreadyInFavorites(movieId) {
     return favorites.some(movie => movie.id === movieId);
 }
 
-// Définition de la fonction addToFavorites
+// Fonction pour afficher une modal d'erreur avec un message
+function displayErrorModal(message) {
+    const errorModalBody = document.getElementById('error-modal-body');
+    errorModalBody.textContent = message;
+
+    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+    errorModal.show();
+}
+
+// Fonction pour ajouter une série aux favoris
 function addToFavorites(serieId, serieTitle, seriePoster) {
-    // Vérifier si le film est déjà dans les favoris
-    if (isMovieAlreadyInFavorites(serieId)) {
-        // Afficher un message d'erreur ou effectuer une action appropriée
-        console.log('Ce film ou série est déjà dans les favoris.');
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+    // Vérifier si l'élément existe déjà dans les favoris
+    const isAlreadyFavorite = favorites.some(serie => serie.id === serieId);
+
+    if (isAlreadyFavorite) {
+        // Afficher la modal d'erreur avec un message approprié
+        const errorMessage = "Ce film ou série est déjà dans les favoris.";
+        displayErrorModal(errorMessage);
         return;
     }
 
-    // Si le film n'est pas déjà dans les favoris, l'ajouter
-    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    // Ajouter l'élément aux favoris
     favorites.push({ id: serieId, title: serieTitle, poster: seriePoster });
     localStorage.setItem('favorites', JSON.stringify(favorites));
 
-    // Affichage de la modal avec le message
-    const successMessage = "Ajouts aux favoris réussi !";
+    // Afficher la modal avec le message de succès
+    const successMessage = "Ajout aux favoris réussi !";
     displaySuccessModal(successMessage);
 }
 
