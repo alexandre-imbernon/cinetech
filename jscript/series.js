@@ -153,9 +153,8 @@ async function getSeries(page = 1) {
                 const searchData = await response.json();
     
                 // Efface le contenu précédent avant d'afficher les nouveaux résultats
-                filmsContainer.innerHTML = '';
-                searchContainer.innerHTML = '';
-                searchContainer.classList.add('row', 'row-cols-1', 'row-cols-md-4', 'mx-auto');
+                seriesContainer.innerHTML = '';
+                
     
                 // Affiche les résultats de la recherche
                 searchData.results.forEach(result => {
@@ -176,13 +175,15 @@ async function getSeries(page = 1) {
                     `;
     
                     // Ajout de la card au container principal
-                    filmsContainer.appendChild(card);
-                    searchContainer.appendChild(card);
+                    seriesContainer.appendChild(card);
+                    
                 });
             } catch (error) {
                 console.error('Erreur lors de la recherche de films :', error);
             }
         });
+
+        
     
     // Fonction pour obtenir l'ID du genre à partir du nom du genre
     function getGenreId(genreName) {
@@ -206,50 +207,6 @@ async function getSeries(page = 1) {
         // Vérifie si le nom du genre correspond à un ID de genre
         return genreMap[lowercaseGenreName] || null;
     }
-
-        // Ajout de la fonction de recherche
-        document.getElementById('searchButton').addEventListener('click', async () => {
-            const searchTerm = document.getElementById('searchInput').value;
-            const searchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&language=fr&query=${searchTerm}`;
-    
-            try {
-                const response = await fetch(searchUrl);
-                const searchData = await response.json();
-    
-                // Efface le contenu précédent avant d'afficher les nouveaux résultats
-                seriesContainer.innerHTML = '';
-                searchContainer.innerHTML = '';
-
-    
-                // Affiche les résultats de la recherche sur la page série
-                searchData.results.forEach(result => {
-                    const card = document.createElement('div');
-                    card.classList.add('col-md-3', 'mb-4');
-                    card.innerHTML = `
-                        <div class="card h-100">
-                            <img src="https://image.tmdb.org/t/p/w500${result.poster_path}" class="card-img-top" alt="${result.title}">
-                            <div class="card-body">
-                                <div class="card-buttons">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <a href="../html/details.html?${result.media_type}_id=${result.id}" class="btn btn-primary btn-details font-monospace"><i class="fas fa-info-circle"></i> Détails</a>
-                                    <button class="btn btn-danger btn-favorite font-monospace" onclick="addToFavorites(${result.id}, '${result.title}', 'https://image.tmdb.org/t/p/w500${result.poster_path}')">
-                                    <i class="fas fa-heart"></i> Favoris
-                                </button>
-                                </div>
-                                <!-- Conteneur pour les commentaires -->
-                                <div class="comments-container"></div>
-                            </div>
-                        </div>
-                    `;
-    
-                    // Ajout de la card au container principal
-                    seriesContainer.appendChild(card);
-                    searchContainer.appendChild(card);
-                });
-            } catch (error) {
-                console.error('Erreur lors de la recherche des series :', error);
-            }
-        });
 
 
         // Ajouter un événement au bouton "Favoris"
