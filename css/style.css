@@ -72,3 +72,7 @@ body {
     background-color: #57ad65; /* Couleur de fond au survol */
 }
 
+/*DETAIL*/
+#avis {
+    background: linear-gradient(to bottom, #473f3f, #000000); /* Dégradé de la couleur #725f5f à #ffffff */
+}

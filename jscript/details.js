@@ -44,19 +44,21 @@ async function getDetails(endpoint, itemId, isSeries) {
     const imageSrc = data.poster_path ? `${baseImageUrl}${data.poster_path}` : '';
     
     const specificDetails = isSeries
-        ? `<p>Nombre de saisons : ${data.number_of_seasons || 'Inconnu'}</p>
-           <p>Nombre d'épisodes : ${data.number_of_episodes || 'Inconnu'}</p>`
-        : `<p>Durée : ${data.runtime ? `${data.runtime} minutes` : 'Inconnu'}</p>`;
+        ? `<p><span style="font-weight: bold; color: red;">Nombre de saisons <span style="color: white;">:</span> ${data.number_of_seasons || 'Inconnu'}</span></p>
+           <p><span style="font-weight: bold; color: red;">Nombre d'épisodes <span style="color: white;">: ${data.number_of_episodes || 'Inconnu'}</p>`
+        : `<p><span style="font-weight: bold; color: red;">Durée <span style="color: white;"> : ${data.runtime ? `${data.runtime} minutes` : 'Inconnu'}</p>`;
 
-    document.getElementById("details").innerHTML = `
-        <h2>${title}</h2>
-        <img src="${imageSrc}" alt="${title}">
-        <p>${data.overview || 'Aucune description disponible'}</p>
+        document.getElementById("details").innerHTML = `
+        <h2 id="avis" class="text-center"><span style="font-weight: bold; color: white;">${title}</h2>
+        <div class="text-center m-4">
+            <img src="${imageSrc}" alt="${title}" class="img-fluid">
+        </div>
+        <p><span style="font-style: italic; color: white;">${data.overview || 'Aucune description disponible'}</p>
         ${specificDetails}
-        <p>Genre : ${genres}</p>
-        <p>Réalisateur : ${credits.crew.find(c => c.job === 'Director')?.name || 'Inconnu'}</p>
-        <p>Acteurs : ${credits.cast.slice(0, 5).map(a => a.name).join(', ') || 'Inconnu'}</p>
-        <p>Nationalité : ${nationality}</p>
+        <p><span style="font-weight: bold; color: red;">Genre <span style="color: white;">: ${genres}</p>
+        <p><span style="font-weight: bold; color: red;">Réalisateur <span style="color: white;">: ${credits.crew.find(c => c.job === 'Director')?.name || 'Inconnu'}</p>
+        <p><span style="font-weight: bold; color: red;">Acteurs <span style="color: white;"> : ${credits.cast.slice(0, 5).map(a => a.name).join(', ') || 'Inconnu'}</p>
+        <p><span style="font-weight: bold; color: red;">Nationalité <span style="color: white;">: ${nationality}</p>
     `;
 
     // Afficher les commentaires avec une option de réponse
@@ -65,7 +67,7 @@ async function getDetails(endpoint, itemId, isSeries) {
     // Afficher les recommandations basées sur le genre
     const recommended = await getRecommended(data.genres?.[0]?.id, isSeries);
     document.getElementById("recommended").innerHTML = `
-        <p>Si vous avez aimé ${title}, vous aimerez : ${recommended}</p>
+        <p><span style=" color: white;"> Si vous avez aimé ${title}, vous aimerez : ${recommended}</p>
     `;
 }
 
@@ -113,15 +115,15 @@ function displayComments(commentsData, itemId) {
     const commentsHtml = commentsData?.results?.length > 0
         ? commentsData.results.map((c, i) => `
             <div class="comment">
-                <strong>Par: ${c.author || 'Anonyme'}</strong>
-                <p>${c.content || 'Pas de contenu.'}</p>
+                <strong><span style="font-weight: bold; color: gray;">Par: ${c.author || 'Anonyme'}</strong>
+                <p><span style="font-style: italic; color: white;">${c.content || 'Pas de contenu.'}</p>
                 <div class="replies" id="replies-${i}">
                     ${storedReplies[i] ? `<strong>Réponses :</strong><p>${storedReplies[i]}</p>` : ""}
                 </div>
-                <button onclick="replyToComment(${i})">Répondre</button>
+                <button class="btn btn-primary" onclick="replyToComment(${i})">Répondre</button>
                 <div id="reply-section-${i}" class="reply-section" style="display: none;">
                     <textarea id="reply-input-${i}" placeholder="Votre réponse"></textarea>
-                    <button onclick="submitReply(${i}, ${itemId})">Soumettre</button>
+                    <button class="btn btn-primary" onclick="submitReply(${i}, ${itemId})">Soumettre</button>
                 </div>
             </div>
         `).join("")
