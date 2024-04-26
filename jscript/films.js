@@ -99,7 +99,7 @@ async function getFilms(page = 1) {
                     const comment = document.createElement('div');
                     comment.classList.add('comment');
                     comment.innerHTML = `
-                        <p><strong>${review.author}</strong>: ${review.content}</p>
+                        <p class="text-truncate"><strong>${review.author}</strong>: ${review.content}</p>
                     `;
                     commentsContainer.appendChild(comment);
                 });
